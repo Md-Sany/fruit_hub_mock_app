@@ -62,9 +62,10 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
                           BasketManager().clearBasket();
 
                           Navigator.pop(context);
-                          Navigator.push(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (_) => const OrderComplete()),
+                                (route) => false,
                           );
                         },
                         style: OutlinedButton.styleFrom(
