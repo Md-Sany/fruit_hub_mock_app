@@ -71,6 +71,8 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   const Spacer(), // Pushes the button to the bottom
                   SafeArea(
+                    top: false,
+                    bottom: true,
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

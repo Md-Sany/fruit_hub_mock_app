@@ -95,6 +95,8 @@ class AuthenticationScreen extends StatelessWidget {
           ),
 
           SafeArea(
+            top: false,
+            bottom: true,
             child: Padding(
               padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 20.h, top: 10.h),
               child: ElevatedButton(
