@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="fruit_hub_mock_app"
+        android:label="Fruit Hub"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
