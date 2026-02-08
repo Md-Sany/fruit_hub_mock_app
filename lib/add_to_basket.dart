@@ -101,7 +101,7 @@ class _AddToBasketState extends State<AddToBasket> {
                         ],
                       ),
                       Text(
-                        "₦ ${widget.product.price}",
+                        "৳ ${widget.product.price}",
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,

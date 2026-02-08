@@ -237,7 +237,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "₦${product.price}",
+                "৳${product.price}",
                 style: TextStyle(
                   color: const Color(0xFFF08626),
                   fontSize: 14.sp,

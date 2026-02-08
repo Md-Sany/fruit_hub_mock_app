@@ -114,7 +114,7 @@ class _OrderListState extends State<OrderList> {
                         ),
                       ),
                       Text(
-                        "₦ ${item.product.price}",
+                        "৳ ${item.product.price}",
                         style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _OrderListState extends State<OrderList> {
                     children: [
                       Text("Total", style: TextStyle(fontSize: 16.sp, color: Colors.black)),
                       Text(
-                        "₦ ${basket.totalAmount.toStringAsFixed(0)}",
+                        "৳ ${basket.totalAmount.toStringAsFixed(0)}",
                         style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: const Color(0xFF27214D)),
                       ),
                     ],
