@@ -92,7 +92,7 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
                           showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
-                            backgroundColor: Colors.transparent, // Required for the floating button
+                            backgroundColor: Colors.transparent,
                             builder: (context) => const InputCardDetails(),
                           );
                         },
@@ -120,9 +120,8 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
           ),
         ),
 
-        // 2. The Independent Floating Close Button
         Positioned(
-          top: 20.h, // Adjusted to sit higher up, away from the white container
+          top: 20.h,
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(

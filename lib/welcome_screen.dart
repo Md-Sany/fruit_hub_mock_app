@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import for scaling
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'authentication_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -12,13 +12,11 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              // Responsive background container
               Container(
-                height: 470.h, // Scaled height instead of size.height * 0.55
+                height: 470.h,
                 width: double.infinity,
                 decoration: const BoxDecoration(color: Color(0xffFFA451)),
               ),
-              // Fruit basket image
               Positioned(
                 height: 260.h,
                 width: 301.w,
@@ -26,7 +24,6 @@ class WelcomeScreen extends StatelessWidget {
                 left: 55.w,
                 child: Image.asset('assets/imgbin-basket-of-fruit.png'),
               ),
-              // Small fruit drops
               Positioned(
                 height: 38.h,
                 width: 50.w,
@@ -34,7 +31,6 @@ class WelcomeScreen extends StatelessWidget {
                 right: 40.w,
                 child: Image.asset('assets/fruit-drops2-removebg-preview 1.png'),
               ),
-              // Shadow/Elliptical decoration
               Positioned(
                 height: 12.h,
                 width: 300.w,
@@ -49,53 +45,59 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 40.h),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Get The Freshest Fruit Salad Combo',
-                  style: TextStyle(
-                    fontSize: 24.sp, // Responsive font size
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF333333),
+          // Using Expanded + Spacer to pin the button to the bottom
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40.h),
+                  Text(
+                    'Get The Freshest Fruit Salad Combo',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF333333),
+                    ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  'We deliver the best and freshest fruit salad in town. Order for a combo today!!!',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: const Color(0xFF666666),
+                  SizedBox(height: 10.h),
+                  Text(
+                    'We deliver the best and freshest fruit salad in town. Order for a combo today!!!',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: const Color(0xFF666666),
+                    ),
                   ),
-                ),
-                SizedBox(height: 80.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const AuthenticationScreen(),
+                  const Spacer(), // Pushes the button to the bottom
+                  SafeArea(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const AuthenticationScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          backgroundColor: const Color(0xffFFA451),
+                          minimumSize: Size(double.infinity, 56.h),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
+                        child: Text(
+                          "Next",
+                          style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                        ),
                       ),
-                      backgroundColor: const Color(0xffFFA451),
-                      minimumSize: Size(double.infinity, 56.h),
-                    ),
-                    child: Text(
-                      "Next",
-                      style: TextStyle(color: Colors.white, fontSize: 16.sp),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 20.h), // Fixed distance from bottom
+                ],
+              ),
             ),
           )
         ],
