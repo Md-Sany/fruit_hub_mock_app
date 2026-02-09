@@ -82,46 +82,49 @@ class _OrderListState extends State<OrderList> {
                     ),
                     child: const Icon(Icons.delete_outline, color: Colors.red),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 65.h,
-                        width: 65.w,
-                        decoration: BoxDecoration(
-                          color: item.product.backgroundColor,
-                          borderRadius: BorderRadius.circular(10.r),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 8.w,),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 65.h,
+                          width: 65.w,
+                          decoration: BoxDecoration(
+                            color: item.product.backgroundColor,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Image.asset(item.product.image, fit: BoxFit.contain),
                         ),
-                        child: Image.asset(item.product.image, fit: BoxFit.contain),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.product.name,
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF27214D)
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.product.name,
+                                style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF27214D)
+                                ),
                               ),
-                            ),
-                            Text(
-                              "${item.quantity} packs",
-                              style: TextStyle(fontSize: 14.sp, color: Colors.black),
-                            ),
-                          ],
+                              Text(
+                                "${item.quantity} packs",
+                                style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Text(
-                        "৳ ${item.product.price}",
-                        style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF27214D)
+                        Text(
+                          "৳ ${item.product.price}",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF27214D)
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
