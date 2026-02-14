@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import added
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'home_screen_one.dart';
 
-class AuthenticationScreen extends StatelessWidget {
+class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
+
+  @override
+  State<AuthenticationScreen> createState() => _AuthenticationScreenState();
+}
+
+class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  // Added controller to capture the name
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +25,6 @@ class AuthenticationScreen extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [
-          // 1. Scrollable Content
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -67,6 +80,7 @@ class AuthenticationScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 20.h),
                         TextFormField(
+                          controller: _nameController, // Attached controller
                           decoration: InputDecoration(
                             hintText: 'Tony',
                             hintStyle: TextStyle(
@@ -93,16 +107,21 @@ class AuthenticationScreen extends StatelessWidget {
               ),
             ),
           ),
-
           SafeArea(
             top: false,
             bottom: true,
             child: Padding(
               padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 20.h, top: 10.h),
               child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const HomeScreenOne()),
-                ),
+                onPressed: () {
+                  // Pass the text from controller to the next screen
+                  String name = _nameController.text.trim();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreenOne(userName: name.isEmpty ? "Tony" : name),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                   backgroundColor: const Color(0xffFFA451),

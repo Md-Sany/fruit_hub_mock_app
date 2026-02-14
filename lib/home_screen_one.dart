@@ -5,7 +5,9 @@ import 'order_list.dart';
 import 'model/product.dart';
 
 class HomeScreenOne extends StatefulWidget {
-  const HomeScreenOne({super.key});
+  final String userName; // Added field to receive the name
+
+  const HomeScreenOne({super.key, this.userName = "Tony"});
 
   @override
   State<HomeScreenOne> createState() => _HomeScreenOneState();
@@ -49,7 +51,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                     color: const Color(0xFF27214D),
                   ),
                   children: [
-                    const TextSpan(text: 'Hello Tony, '),
+                    TextSpan(text: 'Hello ${widget.userName}, '),
                     TextSpan(
                       text: 'What fruit salad combo do you want today?',
                       style: TextStyle(
