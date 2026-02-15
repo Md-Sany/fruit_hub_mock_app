@@ -11,11 +11,9 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
-      clipBehavior: Clip.none, // Allows the button to exist outside the box
+      clipBehavior: Clip.none,
       children: [
-        // 1. The Main Content Box
         Container(
-          // Increase this top margin to push the box further down from the button
           margin: EdgeInsets.only(top: 80.h),
           padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 20.h),
           width: double.infinity,
@@ -58,7 +56,6 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          // Access the singleton instance and clear it
                           BasketManager().clearBasket();
 
                           Navigator.pop(context);

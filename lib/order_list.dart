@@ -51,7 +51,6 @@ class _OrderListState extends State<OrderList> {
             ),
           ),
 
-          // Basket List
           Expanded(
             child: basket.items.isEmpty
                 ? const Center(child: Text("Your basket is empty"))
@@ -154,7 +153,7 @@ class _OrderListState extends State<OrderList> {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        backgroundColor: Colors.transparent, // Required to see the floating button
+                        backgroundColor: Colors.transparent,
                         builder: (context) => const CompleteDetailsBottomSheet(),
                       );
                     },
@@ -169,7 +168,6 @@ class _OrderListState extends State<OrderList> {
               ),
             ),
           ),
-         //SizedBox(height: 20.h),
         ],
       ),
     );

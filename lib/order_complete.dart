@@ -24,7 +24,6 @@ class OrderComplete extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Success Visual
               Center(
                 child: Stack(
                   alignment: Alignment.center,
@@ -67,7 +66,6 @@ class OrderComplete extends StatelessWidget {
               ),
               SizedBox(height: 56.h),
       
-              // Track Order Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -90,12 +88,10 @@ class OrderComplete extends StatelessWidget {
               ),
               SizedBox(height: 20.h),
       
-              // Continue Shopping Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Navigate back to Home and clear the navigation history
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => const HomeScreenOne()),
                           (route) => false,

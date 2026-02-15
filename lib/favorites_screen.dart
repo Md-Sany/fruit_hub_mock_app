@@ -23,7 +23,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Custom Header Style
           Container(
             height: 160.h,
             padding: EdgeInsets.only(top: 30.h, left: 24.w),
@@ -61,7 +60,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
           ),
 
-          // Main Content
           Expanded(
             child: favoriteProducts.isEmpty
                 ? _buildEmptyState()

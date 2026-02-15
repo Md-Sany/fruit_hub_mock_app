@@ -67,7 +67,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const FavoritesScreen()),
-                ).then((_) => setState(() {})); // Refresh home screen state when returning
+                ).then((_) => setState(() {}));
               },
             ),
 
@@ -79,7 +79,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 style: TextStyle(fontSize: 16.sp, color: const Color(0xFF27214D)),
               ),
               onTap: () {
-                Navigator.pop(context); // Close drawer
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const TrackOrder()),
@@ -87,7 +87,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               },
             ),
 
-            const Divider(), // Visual separator
+            const Divider(),
           ],
         ),
       ),
@@ -158,7 +158,6 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                     return GestureDetector(
                       key: ValueKey(product.id),
                       onTap: () async {
-                        // Use 'await' to wait for the AddToBasket screen to be popped
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -166,9 +165,8 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                           ),
                         );
 
-                        // This line runs AFTER you come back from the AddToBasket screen
                         if (mounted) {
-                          setState(() {}); // This refreshes the favorite icons on the Home Screen
+                          setState(() {});
                         }
                       },
                       child: Padding(
@@ -193,16 +191,14 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                     return GestureDetector(
                       key: ValueKey(product.id),
                       onTap: () async {
-                        // Use 'await' to wait for the AddToBasket screen to be popped
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => AddToBasket(product: product),
                           ),
                         );
-                        // This line runs AFTER you come back from the AddToBasket screen
                         if (mounted) {
-                          setState(() {}); // This refreshes the favorite icons on the Home Screen
+                          setState(() {});
                         }
                       },
                       child: Padding(
@@ -344,10 +340,8 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Adds 1 quantity of the product to the basket immediately
                   BasketManager().addToBasket(product, 1);
 
-                  // Feedback for the user
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("${product.name} added to basket!"),
