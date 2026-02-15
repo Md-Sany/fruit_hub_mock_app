@@ -9,131 +9,136 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: 80.h),
-          padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 20.h),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.r),
-              topRight: Radius.circular(40.r),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 80.h),
+            padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 20.h),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40.r),
+                topRight: Radius.circular(40.r),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Delivery address",
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF27214D),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildTextField("10th avenue, Lekki, Lagos State"),
+                  SizedBox(height: 24.h),
+                  Text(
+                    "Number we can call",
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF27214D),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildTextField("09090605708"),
+                  SizedBox(height: 40.h),
+                  SafeArea(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              BasketManager().clearBasket();
+
+                              Navigator.pop(context);
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (_) => const OrderComplete()),
+                                    (route) => false,
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xffFFA451)),
+                              padding: EdgeInsets.symmetric(vertical: 20.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Pay on delivery',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: const Color(0xffFFA451),
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 20.w),
+
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => const InputCardDetails(),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xffFFA451)),
+                              padding: EdgeInsets.symmetric(vertical: 20.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Pay with card',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: const Color(0xffFFA451),
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Delivery address",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF27214D),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              _buildTextField("10th avenue, Lekki, Lagos State"),
-              SizedBox(height: 24.h),
-              Text(
-                "Number we can call",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF27214D),
-                ),
-              ),
-              SizedBox(height: 16.h),
-              _buildTextField("09090605708"),
-              SizedBox(height: 40.h),
-              SafeArea(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          BasketManager().clearBasket();
 
-                          Navigator.pop(context);
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (_) => const OrderComplete()),
-                                (route) => false,
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xffFFA451)),
-                          padding: EdgeInsets.symmetric(vertical: 20.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                        ),
-                        child: Text(
-                          'Pay on delivery',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: const Color(0xffFFA451),
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 20.w),
-
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => const InputCardDetails(),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xffFFA451)),
-                          padding: EdgeInsets.symmetric(vertical: 20.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                        ),
-                        child: Text(
-                          'Pay with card',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: const Color(0xffFFA451),
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+          Positioned(
+            top: 20.h,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                height: 48.r,
+                width: 48.r,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                 ),
+                child: Icon(Icons.close, color: Colors.black, size: 24.sp),
               ),
-            ],
-          ),
-        ),
-
-        Positioned(
-          top: 20.h,
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              height: 48.r,
-              width: 48.r,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.close, color: Colors.black, size: 24.sp),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
