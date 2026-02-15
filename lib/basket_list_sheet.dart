@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'model/basket_manager.dart';
-import 'complete_details.dart';
 
 class BasketListSheet extends StatefulWidget {
   const BasketListSheet({super.key});
