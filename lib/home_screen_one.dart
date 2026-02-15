@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'add_to_basket.dart';
+import 'model/basket_manager.dart';
 import 'order_list.dart';
 import 'model/product.dart';
 
@@ -203,6 +204,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
   }
 
   Widget _buildStandardCard(Product product) {
+    bool isFav = ProductManager().isFavorite(product.id);
     return Container(
       width: 155.w,
       padding: EdgeInsets.all(12.r),
@@ -221,10 +223,17 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: Icon(
-              Icons.favorite_border,
-              color: const Color(0xffFFA451),
-              size: 20.sp,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  ProductManager().toggleFavorite(product.id);
+                });
+              },
+              child: Icon(
+                isFav ? Icons.favorite : Icons.favorite_border,
+                color: const Color(0xffFFA451),
+                size: 20.sp,
+              ),
             ),
           ),
           Image.asset(product.image, height: 80.h, fit: BoxFit.contain),

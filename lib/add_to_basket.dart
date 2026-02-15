@@ -18,6 +18,9 @@ class _AddToBasketState extends State<AddToBasket> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the latest favorite status from the manager
+    bool currentFavoriteStatus = ProductManager().isFavorite(widget.product.id);
+
     return Scaffold(
       backgroundColor: const Color(0xffFFA451),
       body: Column(
@@ -59,7 +62,6 @@ class _AddToBasketState extends State<AddToBasket> {
               ],
             ),
           ),
-
           Expanded(
             child: Container(
               width: double.infinity,
@@ -111,7 +113,7 @@ class _AddToBasketState extends State<AddToBasket> {
                     ],
                   ),
                   SizedBox(height: 30.h),
-                  Divider(color: Colors.grey.withValues(alpha: 0.2)),
+                  Divider(color: Colors.grey.withOpacity(0.2)),
                   SizedBox(height: 20.h),
                   Text(
                     "One Pack Contains:",
@@ -131,20 +133,30 @@ class _AddToBasketState extends State<AddToBasket> {
                   SafeArea(
                     child: Row(
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(12.r),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFFF2E7),
-                            shape: BoxShape.circle,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              ProductManager().toggleFavorite(widget.product.id);
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              color: const Color(0xffFFF2E7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                                currentFavoriteStatus ? Icons.favorite : Icons.favorite_border,
+                                color: const Color(0xffFFA451),
+                                size: 28.sp
+                            ),
                           ),
-                          child: Icon(Icons.favorite_border, color: const Color(0xffFFA451), size: 28.sp),
                         ),
                         SizedBox(width: 20.w),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
                               BasketManager().addToBasket(widget.product, quantity);
-
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Added to basket!"),
@@ -154,7 +166,6 @@ class _AddToBasketState extends State<AddToBasket> {
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                // Using OrderList as the content of the bottom sheet
                                 builder: (context) => const OrderList(),
                               );
                             },

@@ -16,6 +16,18 @@ class Product {
     this.backgroundColor = Colors.white,
     this.isFavorite = false,
   });
+
+  // Added copyWith to handle state updates
+  Product copyWith({bool? isFavorite}) {
+    return Product(
+      id: id,
+      name: name,
+      price: price,
+      image: image,
+      backgroundColor: backgroundColor,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
 
 List<Product> recommendedProducts = [
