@@ -113,7 +113,7 @@ class _AddToBasketState extends State<AddToBasket> {
                     ],
                   ),
                   SizedBox(height: 30.h),
-                  Divider(color: Colors.grey.withOpacity(0.2)),
+                  Divider(color: Colors.grey.withValues(alpha: 0.5)),
                   SizedBox(height: 20.h),
                   Text(
                     "One Pack Contains:",
