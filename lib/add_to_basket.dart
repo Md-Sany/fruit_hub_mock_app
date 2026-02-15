@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'basket_list_sheet.dart';
 import 'model/product.dart';
 import 'model/basket_manager.dart';
 import 'order_list.dart';
@@ -166,7 +167,8 @@ class _AddToBasketState extends State<AddToBasket> {
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                builder: (context) => const OrderList(),
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => const BasketListSheet(),
                               );
                             },
                             style: ElevatedButton.styleFrom(
