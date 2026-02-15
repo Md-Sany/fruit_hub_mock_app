@@ -132,6 +132,7 @@ class _OrderListState extends State<OrderList> {
           ),
 
           // Total & Checkout
+          if (basket.items.isNotEmpty)
           SafeArea(
             child: Padding(
               padding: EdgeInsets.all(24.r),
