@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'basket_list_sheet.dart';
 import 'model/product.dart';
 import 'model/basket_manager.dart';
-import 'order_list.dart';
 
 class AddToBasket extends StatefulWidget {
   final Product product;
