@@ -116,7 +116,7 @@ class _OrderListState extends State<OrderList> {
                           ),
                         ),
                         Text(
-                          "৳ ${item.product.price}",
+                          "৳ ${item.totalItemPrice.toStringAsFixed(0)}",
                           style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,

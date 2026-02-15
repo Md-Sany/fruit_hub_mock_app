@@ -5,6 +5,11 @@ class BasketItem {
   int quantity;
 
   BasketItem({required this.product, this.quantity = 1});
+
+  double get totalItemPrice {
+    double price = double.parse(product.price.replaceAll(',', ''));
+    return price * quantity;
+  }
 }
 
 class BasketManager {
