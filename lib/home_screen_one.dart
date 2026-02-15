@@ -255,13 +255,27 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              CircleAvatar(
-                radius: 12.r,
-                backgroundColor: const Color(0xffFFF2E7),
-                child: Icon(
-                  Icons.add,
-                  color: const Color(0xffFFA451),
-                  size: 16.sp,
+              GestureDetector(
+                onTap: () {
+                  // Adds 1 quantity of the product to the basket immediately
+                  BasketManager().addToBasket(product, 1);
+
+                  // Feedback for the user
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("${product.name} added to basket!"),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 12.r,
+                  backgroundColor: const Color(0xffFFF2E7),
+                  child: Icon(
+                    Icons.add,
+                    color: const Color(0xffFFA451),
+                    size: 16.sp,
+                  ),
                 ),
               ),
             ],
