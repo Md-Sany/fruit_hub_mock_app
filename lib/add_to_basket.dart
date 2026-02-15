@@ -129,11 +129,19 @@ class _AddToBasketState extends State<AddToBasket> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Text(
-                    widget.product.description,
-                    style: TextStyle(fontSize: 14.sp, color: const Color(0xFF27214D)),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Text(
+                        widget.product.description,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF27214D),
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
                   ),
-                  const Spacer(),
                   SafeArea(
                     child: Row(
                       children: [

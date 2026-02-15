@@ -38,14 +38,14 @@ List<Product> recommendedProducts = [
     name: 'Honey lime combo',
     price: '2,000',
     image: 'assets/Honey-Lime-Peach-Fruit-Salad-3-725x725.png',
-    description: "Honey, Lime, Peach, Grapes, and fresh Mint leaves.",
+    description: "Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. Honey, Lime, Peach, Grapes, and fresh Mint leaves. ",
   ),
   Product(
     id: '2',
     name: 'Berry mango combo',
     price: '8,000',
     image: 'assets/Glowing-Berry-Fruit-Salad-8-720x720.png',
-    description: "Blueberries, Blackberries, Mango chunks, and Raspberry syrup.",
+    description: "Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. Blueberries, Blackberries, Mango chunks, and Raspberry syrup. ",
   ),
 ];
 
