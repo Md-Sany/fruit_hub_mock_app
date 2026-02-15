@@ -130,7 +130,7 @@ class _AddToBasketState extends State<AddToBasket> {
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    "Red Quinoa, Lime, Honey, Blueberries, Strawberries, Mango, Fresh mint.",
+                    widget.product.description,
                     style: TextStyle(fontSize: 14.sp, color: const Color(0xFF27214D)),
                   ),
                   const Spacer(),

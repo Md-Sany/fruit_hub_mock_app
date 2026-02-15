@@ -5,6 +5,7 @@ class Product {
   final String name;
   final String price;
   final String image;
+  final String description;
   final Color backgroundColor;
   final bool isFavorite;
 
@@ -13,17 +14,18 @@ class Product {
     required this.name,
     required this.price,
     required this.image,
+    required this.description,
     this.backgroundColor = Colors.white,
     this.isFavorite = false,
   });
 
-  // Added copyWith to handle state updates
-  Product copyWith({bool? isFavorite}) {
+  Product copyWith({bool? isFavorite, String? description}) {
     return Product(
       id: id,
       name: name,
       price: price,
       image: image,
+      description: description ?? this.description,
       backgroundColor: backgroundColor,
       isFavorite: isFavorite ?? this.isFavorite,
     );
@@ -36,12 +38,14 @@ List<Product> recommendedProducts = [
     name: 'Honey lime combo',
     price: '2,000',
     image: 'assets/Honey-Lime-Peach-Fruit-Salad-3-725x725.png',
+    description: "Honey, Lime, Peach, Grapes, and fresh Mint leaves.",
   ),
   Product(
     id: '2',
     name: 'Berry mango combo',
     price: '8,000',
     image: 'assets/Glowing-Berry-Fruit-Salad-8-720x720.png',
+    description: "Blueberries, Blackberries, Mango chunks, and Raspberry syrup.",
   ),
 ];
 
@@ -52,6 +56,7 @@ List<Product> filteredProducts = [
     price: '10,000',
     image: 'assets/breakfast-quinoa-and-red-fruit-salad-134061-1.png',
     backgroundColor: const Color(0xFFFFFAEB),
+    description: "Red Quinoa, Lime, Honey, Blueberries, Strawberries, Mango, Fresh mint.",
   ),
   Product(
     id: '4',
@@ -59,6 +64,7 @@ List<Product> filteredProducts = [
     price: '10,000',
     image: 'assets/Best-Ever-Tropical-Fruit-Salad8-WIDE-removebg-preview 1.png',
     backgroundColor: const Color(0xFFFEF3EF),
+    description: "Pineapple, Papaya, Watermelon, and Coconut flakes.",
   ),
   Product(
     id: '5',
@@ -66,5 +72,6 @@ List<Product> filteredProducts = [
     price: '10,000',
     image: 'assets/BerryWorld-Kiwiberry-Fruit-Salad-LS-removebg-preview 1.png',
     backgroundColor: const Color(0xFFF1EFFE),
+    description: "Honeydew, Cantaloupe, Watermelon, and Lime zest.",
   ),
 ];
