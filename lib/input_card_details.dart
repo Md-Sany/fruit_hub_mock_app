@@ -11,15 +11,12 @@ class InputCardDetails extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: SafeArea(
-        // The SafeArea ensures the "X" button respects the camera notch/status bar
         child: Padding(
-          // This pushes the entire UI up when the keyboard appears
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Stack(
             alignment: Alignment.topCenter,
             clipBehavior: Clip.none,
             children: [
-              // The Main White Container
               Container(
                 margin: EdgeInsets.only(top: 80.h),
                 padding: EdgeInsets.fromLTRB(24.w, 40.h, 24.w, 30.h),
@@ -74,7 +71,7 @@ class InputCardDetails extends StatelessWidget {
                       SizedBox(height: 40.h),
 
                       SafeArea(
-                        top: false, // Bottom safety only here for the button
+                        top: false,
                         child: Container(
                           width: double.infinity,
                           height: 100.h,
@@ -117,9 +114,8 @@ class InputCardDetails extends StatelessWidget {
                 ),
               ),
 
-              // The Floating Close Button
               Positioned(
-                top: 20.h, // Now relative to the SafeArea top
+                top: 20.h,
                 child: GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
