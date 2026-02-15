@@ -157,13 +157,19 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
 
                     return GestureDetector(
                       key: ValueKey(product.id),
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        // Use 'await' to wait for the AddToBasket screen to be popped
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => AddToBasket(product: product),
                           ),
                         );
+
+                        // This line runs AFTER you come back from the AddToBasket screen
+                        if (mounted) {
+                          setState(() {}); // This refreshes the favorite icons on the Home Screen
+                        }
                       },
                       child: Padding(
                         padding: EdgeInsets.only(right: 16.w),
@@ -186,13 +192,18 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
 
                     return GestureDetector(
                       key: ValueKey(product.id),
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        // Use 'await' to wait for the AddToBasket screen to be popped
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => AddToBasket(product: product),
                           ),
                         );
+                        // This line runs AFTER you come back from the AddToBasket screen
+                        if (mounted) {
+                          setState(() {}); // This refreshes the favorite icons on the Home Screen
+                        }
                       },
                       child: Padding(
                         padding: EdgeInsets.only(right: 16.w),

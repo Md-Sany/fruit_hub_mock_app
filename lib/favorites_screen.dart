@@ -13,34 +13,73 @@ class FavoritesScreen extends StatefulWidget {
 class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
+    // Combine product lists and filter favorites
     final allProducts = [...recommendedProducts, ...filteredProducts];
-    final favoriteProducts = allProducts.where((p) => ProductManager().isFavorite(p.id)).toList();
+    final favoriteProducts = allProducts
+        .where((p) => ProductManager().isFavorite(p.id))
+        .toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xffFFA451),
-        elevation: 0,
-        title: Text("My Favorites", style: TextStyle(fontSize: 20.sp, color: Colors.white)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: favoriteProducts.isEmpty
-          ? _buildEmptyState()
-          : GridView.builder(
-        padding: EdgeInsets.all(24.r),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 16.w,
-          mainAxisSpacing: 16.h,
-        ),
-        itemCount: favoriteProducts.length,
-        itemBuilder: (context, index) {
-          return _buildFavoriteCard(favoriteProducts[index]);
-        },
+      body: Column(
+        children: [
+          // Custom Header Style
+          Container(
+            height: 160.h,
+            padding: EdgeInsets.only(top: 30.h, left: 24.w),
+            decoration: const BoxDecoration(color: Color(0xffFFA451)),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_back_ios, size: 14.sp, color: Colors.black),
+                        Text("Go back",
+                            style: TextStyle(fontSize: 14.sp, color: Colors.black)
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 30.w),
+                Text(
+                  "My Favorites",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w500
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Main Content
+          Expanded(
+            child: favoriteProducts.isEmpty
+                ? _buildEmptyState()
+                : GridView.builder(
+              padding: EdgeInsets.all(24.r),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16.w,
+                mainAxisSpacing: 16.h,
+              ),
+              itemCount: favoriteProducts.length,
+              itemBuilder: (context, index) {
+                return _buildFavoriteCard(favoriteProducts[index]);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -52,7 +91,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         children: [
           Icon(Icons.favorite_border, size: 80.sp, color: Colors.grey[300]),
           SizedBox(height: 16.h),
-          Text("No favorites yet!", style: TextStyle(fontSize: 18.sp, color: Colors.grey)),
+          Text("No favorites yet!",
+              style: TextStyle(fontSize: 18.sp, color: Colors.grey)
+          ),
         ],
       ),
     );
@@ -62,7 +103,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: product.backgroundColor, //
+        color: product.backgroundColor,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -81,21 +122,29 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   ProductManager().toggleFavorite(product.id);
                 });
               },
-              child: Icon(Icons.favorite, color: const Color(0xffFFA451), size: 20.sp),
+              child: Icon(
+                  Icons.favorite,
+                  color: const Color(0xffFFA451),
+                  size: 20.sp
+              ),
             ),
           ),
-          Expanded(child: Image.asset(product.image, fit: BoxFit.contain)), //
+          Expanded(child: Image.asset(product.image, fit: BoxFit.contain)),
           SizedBox(height: 8.h),
           Text(
-            product.name, //
+            product.name,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            "৳${product.price}", //
-            style: TextStyle(color: const Color(0xFFF08626), fontSize: 14.sp, fontWeight: FontWeight.bold),
+            "৳${product.price}",
+            style: TextStyle(
+                color: const Color(0xFFF08626),
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold
+            ),
           ),
         ],
       ),
