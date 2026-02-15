@@ -61,61 +61,6 @@ class _BasketListSheetState extends State<BasketListSheet> {
                   },
                 ),
               ),
-
-              // Bottom Action Bar
-              if (basket.items.isNotEmpty)
-                Container(
-                  padding: EdgeInsets.all(24.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -5),
-                      )
-                    ],
-                  ),
-                  child: SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text("Total", style: TextStyle(fontSize: 16.sp, color: Colors.black)),
-                            Text(
-                              "৳ ${basket.totalAmount.toStringAsFixed(0)}",
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF27214D),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context); // Close this sheet
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => const CompleteDetailsBottomSheet(),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffFFA451),
-                            padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 16.h),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: Text("Checkout", style: TextStyle(color: Colors.white, fontSize: 16.sp)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
             ],
           ),
         ),

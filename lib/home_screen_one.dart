@@ -8,7 +8,7 @@ import 'favorites_screen.dart';
 import 'track_order.dart';
 
 class HomeScreenOne extends StatefulWidget {
-  final String userName; // Added field to receive the name
+  final String userName;
 
   const HomeScreenOne({super.key, this.userName = "Tony"});
 
