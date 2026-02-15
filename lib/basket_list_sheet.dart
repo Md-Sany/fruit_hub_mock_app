@@ -18,11 +18,10 @@ class _BasketListSheetState extends State<BasketListSheet> {
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
-        // Main Container (Styled like CompleteDetails)
         Container(
           margin: EdgeInsets.only(top: 80.h),
           width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.7, // Set a fixed height for the sheet
+          height: MediaQuery.of(context).size.height * 0.7,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -42,7 +41,6 @@ class _BasketListSheetState extends State<BasketListSheet> {
                 ),
               ),
 
-              // Scrollable List (Styled like OrderList)
               Expanded(
                 child: basket.items.isEmpty
                     ? const Center(child: Text("Your basket is empty"))
@@ -64,7 +62,6 @@ class _BasketListSheetState extends State<BasketListSheet> {
           ),
         ),
 
-        // Floating Close Button (From CompleteDetails)
         Positioned(
           top: 20.h,
           child: GestureDetector(
