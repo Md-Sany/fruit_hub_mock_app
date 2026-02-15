@@ -4,6 +4,8 @@ import 'add_to_basket.dart';
 import 'model/basket_manager.dart';
 import 'order_list.dart';
 import 'model/product.dart';
+import 'favorites_screen.dart';
+import 'track_order.dart';
 
 class HomeScreenOne extends StatefulWidget {
   final String userName; // Added field to receive the name
@@ -22,6 +24,73 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Drawer Header
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color(0xffFFA451),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    radius: 30.r,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, size: 40.sp, color: const Color(0xffFFA451)),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    'Hello, ${widget.userName}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 1. My Favorites Tile
+            ListTile(
+              leading: const Icon(Icons.favorite, color: Color(0xffFFA451)),
+              title: Text(
+                'My Favorites',
+                style: TextStyle(fontSize: 16.sp, color: const Color(0xFF27214D)),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                ).then((_) => setState(() {})); // Refresh home screen state when returning
+              },
+            ),
+
+            // 2. Track Order Tile
+            ListTile(
+              leading: const Icon(Icons.local_shipping, color: Color(0xffFFA451)),
+              title: Text(
+                'Track Order',
+                style: TextStyle(fontSize: 16.sp, color: const Color(0xFF27214D)),
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TrackOrder()),
+                );
+              },
+            ),
+
+            const Divider(), // Visual separator
+          ],
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -32,7 +101,12 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.drag_handle, size: 32.sp),
+                  IconButton(
+                    icon: Icon(Icons.drag_handle, size: 32.sp),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
