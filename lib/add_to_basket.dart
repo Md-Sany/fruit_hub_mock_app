@@ -16,9 +16,13 @@ class AddToBasket extends StatefulWidget {
 class _AddToBasketState extends State<AddToBasket> {
   int quantity = 1;
 
+  double get totalPrice {
+    double unitPrice = double.parse(widget.product.price.replaceAll(',', ''));
+    return unitPrice * quantity;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get the latest favorite status from the manager
     bool currentFavoriteStatus = ProductManager().isFavorite(widget.product.id);
 
     return Scaffold(
@@ -103,7 +107,7 @@ class _AddToBasketState extends State<AddToBasket> {
                         ],
                       ),
                       Text(
-                        "৳ ${widget.product.price}",
+                        "৳ ${totalPrice.toStringAsFixed(0)}",
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
