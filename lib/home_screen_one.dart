@@ -101,11 +101,13 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.drag_handle, size: 32.sp),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
+                  Builder(
+                    builder: (context) => IconButton(
+                      icon: Icon(Icons.drag_handle, size: 32.sp),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
