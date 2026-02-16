@@ -10,25 +10,23 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  // Controller to capture the name
+
   final TextEditingController _nameController = TextEditingController();
 
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _nameController.dispose(); //
+    _nameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, //
+      resizeToAvoidBottomInset: true,
       body: Form(
-        key: _formKey, // Assign the key to the Form
+        key: _formKey,
         child: Column(
           children: [
             Expanded(
@@ -86,8 +84,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           ),
                           SizedBox(height: 20.h),
                           TextFormField(
-                            controller: _nameController, //
-                            // Added validator logic
+                            controller: _nameController,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter your name';
@@ -111,7 +108,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                                 borderRadius: BorderRadius.circular(10.r),
                                 borderSide: const BorderSide(color: Color(0xffFFA451)),
                               ),
-                              // Added error border styling for a cleaner look
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.r),
                                 borderSide: const BorderSide(color: Colors.red, width: 1),
@@ -136,7 +132,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 padding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 20.h, top: 10.h),
                 child: ElevatedButton(
                   onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       String name = _nameController.text.trim();
                       Navigator.of(context).pushReplacement(
