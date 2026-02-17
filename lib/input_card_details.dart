@@ -13,7 +13,6 @@ class InputCardDetails extends StatefulWidget {
 class _InputCardDetailsState extends State<InputCardDetails> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers to clear or access text if needed
   final _nameController = TextEditingController();
   final _cardNumberController = TextEditingController();
   final _dateController = TextEditingController();
@@ -30,7 +29,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 
   void _completeOrder() {
     if (_formKey.currentState!.validate()) {
-      // Clear basket and navigate to success screen
       BasketManager().clearBasket();
       Navigator.pushAndRemoveUntil(
         context,
