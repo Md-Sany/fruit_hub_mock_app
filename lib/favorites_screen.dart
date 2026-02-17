@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'add_to_basket.dart';
 import 'model/product.dart';
 import 'model/basket_manager.dart';
 
@@ -13,7 +14,6 @@ class FavoritesScreen extends StatefulWidget {
 class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
-    // Combine product lists and filter favorites
     final allProducts = [...recommendedProducts, ...filteredProducts];
     final favoriteProducts = allProducts
         .where((p) => ProductManager().isFavorite(p.id))
@@ -73,7 +73,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ),
               itemCount: favoriteProducts.length,
               itemBuilder: (context, index) {
-                return _buildFavoriteCard(favoriteProducts[index]);
+                final product = allProducts[index];
+                return GestureDetector(
+                  key: ValueKey(product.id),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddToBasket(product: product),
+                      ),
+                    );
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                  child: _buildFavoriteCard(favoriteProducts[index]),
+                );
               },
             ),
           ),
