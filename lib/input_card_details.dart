@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Required for TextInputFormatter
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'model/basket_manager.dart';
 import 'order_complete.dart';
@@ -30,7 +30,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 
   void _completeOrder() {
     if (_formKey.currentState!.validate()) {
-      // Clear basket and navigate to success screen
       BasketManager().clearBasket();
       Navigator.pushAndRemoveUntil(
         context,
@@ -84,7 +83,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                           controller: _cardNumberController,
                           hint: "1234 5678 9012 1314",
                           keyboardType: TextInputType.number,
-                          // Formats input as 0000 0000 0000 0000
                           formatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(16),
@@ -111,7 +109,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                     controller: _dateController,
                                     hint: "10/30",
                                     keyboardType: TextInputType.number,
-                                    // Formats input as MM/YY
                                     formatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(4),
@@ -251,7 +248,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
   }
 }
 
-// --- Custom Formatters ---
 
 class CardDateFormatter extends TextInputFormatter {
   @override
@@ -263,7 +259,6 @@ class CardDateFormatter extends TextInputFormatter {
     for (int i = 0; i < newText.length; i++) {
       buffer.write(newText[i]);
       var index = i + 1;
-      // If we are at the 2nd digit (MM), and it's not the end of the string, add '/'
       if (index == 2 && index != newText.length) {
         buffer.write('/');
       }
@@ -286,7 +281,6 @@ class CardNumberFormatter extends TextInputFormatter {
     for (int i = 0; i < text.length; i++) {
       buffer.write(text[i]);
       var index = i + 1;
-      // Add space every 4 digits, but not at the very end
       if (index % 4 == 0 && index != text.length) {
         buffer.write(' ');
       }
