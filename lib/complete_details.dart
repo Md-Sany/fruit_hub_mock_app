@@ -4,8 +4,49 @@ import 'order_complete.dart';
 import 'model/basket_manager.dart';
 import 'input_card_details.dart';
 
-class CompleteDetailsBottomSheet extends StatelessWidget {
+class CompleteDetailsBottomSheet extends StatefulWidget {
   const CompleteDetailsBottomSheet({super.key});
+
+  @override
+  State<CompleteDetailsBottomSheet> createState() => _CompleteDetailsBottomSheetState();
+}
+
+class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet> {
+  // 1. Create a GlobalKey for the form
+  final _formKey = GlobalKey<FormState>();
+
+  // 2. Create Controllers to access the text values
+  final _addressController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _processPayment(bool isCard) {
+    // 3. Validate the form
+    if (_formKey.currentState!.validate()) {
+      if (isCard) {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const InputCardDetails(),
+        );
+      } else {
+        BasketManager().clearBasket();
+        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const OrderComplete()),
+              (route) => false,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,101 +68,76 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
               ),
             ),
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Delivery address",
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF27214D),
+              // 4. Wrap the column in a Form widget
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Delivery address",
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF27214D),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField("10th avenue, Lekki, Lagos State"),
-                  SizedBox(height: 24.h),
-                  Text(
-                    "Number we can call",
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF27214D),
+                    SizedBox(height: 16.h),
+                    _buildTextField(
+                      controller: _addressController,
+                      hint: "10th avenue, Lekki, Lagos State",
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Please enter an address";
+                        return null;
+                      },
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField("09090605708"),
-                  SizedBox(height: 40.h),
-                  SafeArea(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              BasketManager().clearBasket();
-
-                              Navigator.pop(context);
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (_) => const OrderComplete()),
-                                    (route) => false,
-                              );
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xffFFA451)),
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                            ),
-                            child: Text(
-                              'Pay on delivery',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: const Color(0xffFFA451),
-                                fontSize: 14.sp,
-                              ),
+                    SizedBox(height: 24.h),
+                    Text(
+                      "Number we can call",
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF27214D),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    _buildTextField(
+                      controller: _phoneController,
+                      hint: "09090605708",
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Please enter a phone number";
+                        if (value.length < 10) return "Enter a valid phone number";
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 40.h),
+                    SafeArea(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionButton(
+                              text: 'Pay on delivery',
+                              onPressed: () => _processPayment(false),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 20.w),
-
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) => const InputCardDetails(),
-                              );
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xffFFA451)),
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                            ),
-                            child: Text(
-                              'Pay with card',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: const Color(0xffFFA451),
-                                fontSize: 14.sp,
-                              ),
+                          SizedBox(width: 20.w),
+                          Expanded(
+                            child: _buildActionButton(
+                              text: 'Pay with card',
+                              onPressed: () => _processPayment(true),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-
+          // Close button remains the same...
           Positioned(
             top: 20.h,
             child: GestureDetector(
@@ -129,10 +145,7 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
               child: Container(
                 height: 48.r,
                 width: 48.r,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                 child: Icon(Icons.close, color: Colors.black, size: 24.sp),
               ),
             ),
@@ -142,22 +155,45 @@ class CompleteDetailsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String hint) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 16.h,
-          ),
+  // Refactored TextField with validation support
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required String? Function(String?)? validator,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: const Color(0xFFF3F3F3),
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide.none,
         ),
+        errorStyle: const TextStyle(height: 0.8), // Adjusts error text spacing
+      ),
+    );
+  }
+
+  // Helper for consistent button styling
+  Widget _buildActionButton({required String text, required VoidCallback onPressed}) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: Color(0xffFFA451)),
+        padding: EdgeInsets.symmetric(vertical: 20.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+      ),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: const Color(0xffFFA451), fontSize: 14.sp),
       ),
     );
   }
