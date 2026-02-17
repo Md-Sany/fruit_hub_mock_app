@@ -3,8 +3,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'model/basket_manager.dart';
 import 'order_complete.dart';
 
-class InputCardDetails extends StatelessWidget {
+class InputCardDetails extends StatefulWidget {
   const InputCardDetails({super.key});
+
+  @override
+  State<InputCardDetails> createState() => _InputCardDetailsState();
+}
+
+class _InputCardDetailsState extends State<InputCardDetails> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Controllers to clear or access text if needed
+  final _nameController = TextEditingController();
+  final _cardNumberController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _ccvController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _cardNumberController.dispose();
+    _dateController.dispose();
+    _ccvController.dispose();
+    super.dispose();
+  }
+
+  void _completeOrder() {
+    if (_formKey.currentState!.validate()) {
+      // Clear basket and navigate to success screen
+      BasketManager().clearBasket();
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const OrderComplete()),
+            (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,87 +63,113 @@ class InputCardDetails extends StatelessWidget {
                   ),
                 ),
                 child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildLabel("Card Holders Name"),
-                      SizedBox(height: 12.h),
-                      _buildTextField("Adolphus Chris"),
-                      SizedBox(height: 24.h),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabel("Card Holders Name"),
+                        SizedBox(height: 12.h),
+                        _buildTextField(
+                          controller: _nameController,
+                          hint: "Adolphus Chris",
+                          validator: (val) => (val == null || val.isEmpty) ? "Enter holder name" : null,
+                        ),
+                        SizedBox(height: 24.h),
 
-                      _buildLabel("Card Number"),
-                      SizedBox(height: 12.h),
-                      _buildTextField("1234 5678 9012 1314"),
-                      SizedBox(height: 24.h),
+                        _buildLabel("Card Number"),
+                        SizedBox(height: 12.h),
+                        _buildTextField(
+                          controller: _cardNumberController,
+                          hint: "1234 5678 9012 1314",
+                          keyboardType: TextInputType.number,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) return "Enter card number";
+                            if (val.replaceAll(' ', '').length < 16) return "Invalid card number";
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 24.h),
 
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildLabel("Date"),
-                                SizedBox(height: 12.h),
-                                _buildTextField("10/30"),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 25.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildLabel("CCV"),
-                                SizedBox(height: 12.h),
-                                _buildTextField("123"),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 40.h),
-
-                      SafeArea(
-                        top: false,
-                        child: Container(
-                          width: double.infinity,
-                          height: 100.h,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFB067),
-                            borderRadius: BorderRadius.circular(24.r),
-                          ),
-                          child: Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                BasketManager().clearBasket();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const OrderComplete()),
-                                      (route) => false,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                elevation: 0,
-                                padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildLabel("Date"),
+                                  SizedBox(height: 12.h),
+                                  _buildTextField(
+                                    controller: _dateController,
+                                    hint: "10/30",
+                                    keyboardType: TextInputType.datetime,
+                                    validator: (val) {
+                                      if (val == null || !val.contains('/')) return "MM/YY";
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ),
-                              child: Text(
-                                "Complete Order",
-                                style: TextStyle(
-                                  color: const Color(0xFFFFB067),
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(width: 25.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildLabel("CCV"),
+                                  SizedBox(height: 12.h),
+                                  _buildTextField(
+                                    controller: _ccvController,
+                                    hint: "123",
+                                    keyboardType: TextInputType.number,
+                                    validator: (val) {
+                                      if (val == null || val.length < 3) return "Invalid";
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 40.h),
+
+                        SafeArea(
+                          top: false,
+                          child: Container(
+                            width: double.infinity,
+                            height: 100.h,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFB067),
+                              borderRadius: BorderRadius.circular(24.r),
+                            ),
+                            child: Center(
+                              child: ElevatedButton(
+                                onPressed: _completeOrder,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 0,
+                                  padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Complete Order",
+                                  style: TextStyle(
+                                    color: const Color(0xFFFFB067),
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -147,19 +207,27 @@ class InputCardDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String hint) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required String? Function(String?)? validator,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
+        filled: true,
+        fillColor: const Color(0xFFF3F3F3),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide.none,
         ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        errorStyle: const TextStyle(height: 0.8),
       ),
     );
   }
