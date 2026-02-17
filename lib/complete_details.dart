@@ -12,10 +12,8 @@ class CompleteDetailsBottomSheet extends StatefulWidget {
 }
 
 class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet> {
-  // 1. Create a GlobalKey for the form
   final _formKey = GlobalKey<FormState>();
 
-  // 2. Create Controllers to access the text values
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
 
@@ -27,7 +25,6 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
   }
 
   void _processPayment(bool isCard) {
-    // 3. Validate the form
     if (_formKey.currentState!.validate()) {
       if (isCard) {
         showModalBottomSheet(
@@ -68,7 +65,6 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
               ),
             ),
             child: SingleChildScrollView(
-              // 4. Wrap the column in a Form widget
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -137,7 +133,6 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
               ),
             ),
           ),
-          // Close button remains the same...
           Positioned(
             top: 20.h,
             child: GestureDetector(
@@ -155,7 +150,6 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
     );
   }
 
-  // Refactored TextField with validation support
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
@@ -176,12 +170,11 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
           borderRadius: BorderRadius.circular(10.r),
           borderSide: BorderSide.none,
         ),
-        errorStyle: const TextStyle(height: 0.8), // Adjusts error text spacing
+        errorStyle: const TextStyle(height: 0.8),
       ),
     );
   }
 
-  // Helper for consistent button styling
   Widget _buildActionButton({required String text, required VoidCallback onPressed}) {
     return OutlinedButton(
       onPressed: onPressed,
