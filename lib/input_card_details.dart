@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Required for TextInputFormatter
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'model/basket_manager.dart';
 import 'order_complete.dart';
@@ -29,6 +30,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 
   void _completeOrder() {
     if (_formKey.currentState!.validate()) {
+      // Clear basket and navigate to success screen
       BasketManager().clearBasket();
       Navigator.pushAndRemoveUntil(
         context,
@@ -82,6 +84,12 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                           controller: _cardNumberController,
                           hint: "1234 5678 9012 1314",
                           keyboardType: TextInputType.number,
+                          // Formats input as 0000 0000 0000 0000
+                          formatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(16),
+                            CardNumberFormatter(),
+                          ],
                           validator: (val) {
                             if (val == null || val.isEmpty) return "Enter card number";
                             if (val.replaceAll(' ', '').length < 16) return "Invalid card number";
@@ -102,9 +110,15 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                   _buildTextField(
                                     controller: _dateController,
                                     hint: "10/30",
-                                    keyboardType: TextInputType.datetime,
+                                    keyboardType: TextInputType.number,
+                                    // Formats input as MM/YY
+                                    formatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(4),
+                                      CardDateFormatter(),
+                                    ],
                                     validator: (val) {
-                                      if (val == null || !val.contains('/')) return "MM/YY";
+                                      if (val == null || val.length < 5) return "MM/YY";
                                       return null;
                                     },
                                   ),
@@ -122,6 +136,10 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                     controller: _ccvController,
                                     hint: "123",
                                     keyboardType: TextInputType.number,
+                                    formatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(3),
+                                    ],
                                     validator: (val) {
                                       if (val == null || val.length < 3) return "Invalid";
                                       return null;
@@ -210,11 +228,13 @@ class _InputCardDetailsState extends State<InputCardDetails> {
     required String hint,
     required String? Function(String?)? validator,
     TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? formatters,
   }) {
     return TextFormField(
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
+      inputFormatters: formatters,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
@@ -227,6 +247,54 @@ class _InputCardDetailsState extends State<InputCardDetails> {
         contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
         errorStyle: const TextStyle(height: 0.8),
       ),
+    );
+  }
+}
+
+// --- Custom Formatters ---
+
+class CardDateFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    var newText = newValue.text;
+    if (newValue.selection.baseOffset == 0) return newValue;
+
+    var buffer = StringBuffer();
+    for (int i = 0; i < newText.length; i++) {
+      buffer.write(newText[i]);
+      var index = i + 1;
+      // If we are at the 2nd digit (MM), and it's not the end of the string, add '/'
+      if (index == 2 && index != newText.length) {
+        buffer.write('/');
+      }
+    }
+
+    return newValue.copyWith(
+      text: buffer.toString(),
+      selection: TextSelection.collapsed(offset: buffer.toString().length),
+    );
+  }
+}
+
+class CardNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+    if (newValue.selection.baseOffset == 0) return newValue;
+
+    var buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var index = i + 1;
+      // Add space every 4 digits, but not at the very end
+      if (index % 4 == 0 && index != text.length) {
+        buffer.write(' ');
+      }
+    }
+
+    return newValue.copyWith(
+      text: buffer.toString(),
+      selection: TextSelection.collapsed(offset: buffer.toString().length),
     );
   }
 }
