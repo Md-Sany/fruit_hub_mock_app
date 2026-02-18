@@ -118,7 +118,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                       if (val == null || val.isEmpty) return "Enter date";
                                       if (val.length < 5) return "Invalid format";
 
-                                      // Logic to prevent impossible dates
                                       int month = int.parse(val.substring(0, 2));
                                       if (month < 1 || month > 12) return "Invalid month";
 
@@ -259,7 +258,6 @@ class CardDateFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     final text = newValue.text;
 
-    // Handle backspace properly
     if (oldValue.text.length > text.length) {
       return newValue;
     }
@@ -269,7 +267,6 @@ class CardDateFormatter extends TextInputFormatter {
       buffer.write(text[i]);
       var nonZeroIndex = i + 1;
 
-      // Add slash after the second digit
       if (nonZeroIndex == 2 && nonZeroIndex != text.length) {
         buffer.write('/');
       }
