@@ -107,7 +107,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                   SizedBox(height: 12.h),
                                   _buildTextField(
                                     controller: _dateController,
-                                    hint: "MM/YY",
+                                    hint: "10/30",
                                     keyboardType: TextInputType.number,
                                     formatters: [
                                       FilteringTextInputFormatter.digitsOnly,
@@ -117,7 +117,6 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                     validator: (val) {
                                       if (val == null || val.length < 5) return "MM/YY";
 
-                                      // Validate logic for Expired Date
                                       final month = int.parse(val.substring(0, 2));
                                       final year = int.parse('20${val.substring(3, 5)}');
                                       final now = DateTime.now();
@@ -263,7 +262,6 @@ class CardDateFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     var newText = newValue.text;
 
-    // If user is deleting, just return
     if (oldValue.text.length > newValue.text.length) {
       return newValue;
     }
@@ -272,10 +270,8 @@ class CardDateFormatter extends TextInputFormatter {
     for (int i = 0; i < newText.length; i++) {
       buffer.write(newText[i]);
 
-      // Auto-validate month as it's typed
       if (buffer.length == 1) {
         int firstDigit = int.parse(buffer.toString());
-        // If first digit is > 1, it must be 0X (like 09)
         if (firstDigit > 1) {
           buffer.clear();
           buffer.write('0$firstDigit/');
@@ -283,7 +279,6 @@ class CardDateFormatter extends TextInputFormatter {
       } else if (buffer.length == 2) {
         int month = int.parse(buffer.toString());
         if (month > 12) {
-          // Reset to max month if invalid
           buffer.clear();
           buffer.write('12/');
         } else {
