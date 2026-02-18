@@ -115,16 +115,13 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                       CardDateFormatter(),
                                     ],
                                     validator: (val) {
-                                      if (val == null || val.length < 5) return "MM/YY";
+                                      if (val == null || val.isEmpty) return "Enter date";
+                                      if (val.length < 5) return "Invalid format";
 
-                                      final month = int.parse(val.substring(0, 2));
-                                      final year = int.parse('20${val.substring(3, 5)}');
-                                      final now = DateTime.now();
-
+                                      // Logic to prevent impossible dates
+                                      int month = int.parse(val.substring(0, 2));
                                       if (month < 1 || month > 12) return "Invalid month";
-                                      if (year < now.year || (year == now.year && month < now.month)) {
-                                        return "Expired";
-                                      }
+
                                       return null;
                                     },
                                   ),
@@ -260,34 +257,25 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 class CardDateFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    var newText = newValue.text;
+    final text = newValue.text;
 
-    if (oldValue.text.length > newValue.text.length) {
+    // Handle backspace properly
+    if (oldValue.text.length > text.length) {
       return newValue;
     }
 
     var buffer = StringBuffer();
-    for (int i = 0; i < newText.length; i++) {
-      buffer.write(newText[i]);
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
 
-      if (buffer.length == 1) {
-        int firstDigit = int.parse(buffer.toString());
-        if (firstDigit > 1) {
-          buffer.clear();
-          buffer.write('0$firstDigit/');
-        }
-      } else if (buffer.length == 2) {
-        int month = int.parse(buffer.toString());
-        if (month > 12) {
-          buffer.clear();
-          buffer.write('12/');
-        } else {
-          buffer.write('/');
-        }
+      // Add slash after the second digit
+      if (nonZeroIndex == 2 && nonZeroIndex != text.length) {
+        buffer.write('/');
       }
     }
 
-    var string = buffer.toString();
+    final String string = buffer.toString();
     return newValue.copyWith(
       text: string,
       selection: TextSelection.collapsed(offset: string.length),
