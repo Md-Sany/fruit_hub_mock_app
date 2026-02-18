@@ -107,7 +107,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                   SizedBox(height: 12.h),
                                   _buildTextField(
                                     controller: _dateController,
-                                    hint: "10/30",
+                                    hint: "MM/YY",
                                     keyboardType: TextInputType.number,
                                     formatters: [
                                       FilteringTextInputFormatter.digitsOnly,
@@ -116,6 +116,16 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                     ],
                                     validator: (val) {
                                       if (val == null || val.length < 5) return "MM/YY";
+
+                                      // Validate logic for Expired Date
+                                      final month = int.parse(val.substring(0, 2));
+                                      final year = int.parse('20${val.substring(3, 5)}');
+                                      final now = DateTime.now();
+
+                                      if (month < 1 || month > 12) return "Invalid month";
+                                      if (year < now.year || (year == now.year && month < now.month)) {
+                                        return "Expired";
+                                      }
                                       return null;
                                     },
                                   ),
@@ -248,25 +258,44 @@ class _InputCardDetailsState extends State<InputCardDetails> {
   }
 }
 
-
 class CardDateFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     var newText = newValue.text;
-    if (newValue.selection.baseOffset == 0) return newValue;
+
+    // If user is deleting, just return
+    if (oldValue.text.length > newValue.text.length) {
+      return newValue;
+    }
 
     var buffer = StringBuffer();
     for (int i = 0; i < newText.length; i++) {
       buffer.write(newText[i]);
-      var index = i + 1;
-      if (index == 2 && index != newText.length) {
-        buffer.write('/');
+
+      // Auto-validate month as it's typed
+      if (buffer.length == 1) {
+        int firstDigit = int.parse(buffer.toString());
+        // If first digit is > 1, it must be 0X (like 09)
+        if (firstDigit > 1) {
+          buffer.clear();
+          buffer.write('0$firstDigit/');
+        }
+      } else if (buffer.length == 2) {
+        int month = int.parse(buffer.toString());
+        if (month > 12) {
+          // Reset to max month if invalid
+          buffer.clear();
+          buffer.write('12/');
+        } else {
+          buffer.write('/');
+        }
       }
     }
 
+    var string = buffer.toString();
     return newValue.copyWith(
-      text: buffer.toString(),
-      selection: TextSelection.collapsed(offset: buffer.toString().length),
+      text: string,
+      selection: TextSelection.collapsed(offset: string.length),
     );
   }
 }
