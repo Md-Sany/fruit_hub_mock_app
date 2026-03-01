@@ -6,11 +6,11 @@ import 'order_list.dart';
 import 'model/product.dart';
 import 'favorites_screen.dart';
 import 'track_order.dart';
+import 'user_controller.dart';
+import 'package:get/get.dart';
 
 class HomeScreenOne extends StatefulWidget {
-  final String userName;
-
-  const HomeScreenOne({super.key, this.userName = ""});
+  final UserController userController = Get.find();
 
   @override
   State<HomeScreenOne> createState() => _HomeScreenOneState();
@@ -30,9 +30,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
           children: [
             // Drawer Header
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color(0xffFFA451),
-              ),
+              decoration: const BoxDecoration(color: Color(0xffFFA451)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -40,15 +38,21 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                   CircleAvatar(
                     radius: 30.r,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 40.sp, color: const Color(0xffFFA451)),
+                    child: Icon(
+                      Icons.person,
+                      size: 40.sp,
+                      color: const Color(0xffFFA451),
+                    ),
                   ),
                   SizedBox(height: 10.h),
-                  Text(
-                    'Hello, ${widget.userName}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
+                  Obx(
+                    () => Text(
+                      'Hello, ${widget.userController.userName.value}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -60,23 +64,34 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               leading: const Icon(Icons.favorite, color: Color(0xffFFA451)),
               title: Text(
                 'My Favorites',
-                style: TextStyle(fontSize: 16.sp, color: const Color(0xFF27214D)),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: const Color(0xFF27214D),
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesScreen(),
+                  ),
                 ).then((_) => setState(() {}));
               },
             ),
 
             // 2. Track Order Tile
             ListTile(
-              leading: const Icon(Icons.local_shipping, color: Color(0xffFFA451)),
+              leading: const Icon(
+                Icons.local_shipping,
+                color: Color(0xffFFA451),
+              ),
               title: Text(
                 'Track Order',
-                style: TextStyle(fontSize: 16.sp, color: const Color(0xFF27214D)),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: const Color(0xFF27214D),
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -121,23 +136,25 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 ],
               ),
               SizedBox(height: 24.h),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    color: const Color(0xFF27214D),
-                  ),
-                  children: [
-                    TextSpan(text: 'Hello ${widget.userName}, '),
-                    TextSpan(
-                      text: 'What fruit salad combo do you want today?',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.sp,
+              Obx(
+                    () => RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          color: const Color(0xFF27214D),
+                        ),
+                        children: [
+                          TextSpan(text: 'Hello ${widget.userController.userName.value}, '),
+                          TextSpan(
+                            text: 'What fruit salad combo do you want today?',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.sp,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
               ),
               SizedBox(height: 24.h),
               _buildSearchBar(),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'home_screen_one.dart';
+import 'package:get/get.dart';
+import 'user_controller.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({super.key});
@@ -23,6 +25,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final UserController userController = Get.put(UserController());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
@@ -134,12 +137,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      String name = _nameController.text.trim();
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreenOne(userName: name),
-                        ),
-                      );
+                      // Save the name to the controller
+                      userController.updateName(_nameController.text.trim());
+
+                      // Navigate using GetX (replaces Navigator.pushReplacement)
+                      Get.off(() => HomeScreenOne());
                     }
                   },
                   style: ElevatedButton.styleFrom(

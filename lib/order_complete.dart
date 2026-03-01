@@ -13,7 +13,7 @@ class OrderComplete extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const HomeScreenOne()),
+          MaterialPageRoute(builder: (context) => HomeScreenOne()),
               (route) => false,
         );
       },
@@ -93,7 +93,7 @@ class OrderComplete extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const HomeScreenOne()),
+                      MaterialPageRoute(builder: (context) => HomeScreenOne()),
                           (route) => false,
                     );
                   },
