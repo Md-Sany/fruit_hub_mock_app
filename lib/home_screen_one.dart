@@ -6,7 +6,7 @@ import 'order_list.dart';
 import 'model/product.dart';
 import 'favorites_screen.dart';
 import 'track_order.dart';
-import 'user_controller.dart';
+import 'controller/user_controller.dart';
 import 'package:get/get.dart';
 
 class HomeScreenOne extends StatefulWidget {
