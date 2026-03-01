@@ -85,6 +85,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           SizedBox(height: 20.h),
                           TextFormField(
                             controller: _nameController,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter your name';

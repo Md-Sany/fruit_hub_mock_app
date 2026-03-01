@@ -160,6 +160,7 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: hint,
         filled: true,

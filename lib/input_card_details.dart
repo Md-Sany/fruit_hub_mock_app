@@ -237,6 +237,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
       validator: validator,
       keyboardType: keyboardType,
       inputFormatters: formatters,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
