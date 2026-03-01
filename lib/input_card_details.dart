@@ -243,11 +243,26 @@ class _InputCardDetailsState extends State<InputCardDetails> {
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16.sp),
         filled: true,
         fillColor: const Color(0xFFF3F3F3),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide.none,
-        ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: Colors.transparent, width: 1),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: const Color(0xffFFA451), width: 1.5),
+        ),
+
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: const BorderSide(color: Colors.red, width: 1),
+        ),
+
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
         errorStyle: const TextStyle(height: 0.8),
       ),
     );
