@@ -177,12 +177,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                     return GestureDetector(
                       key: ValueKey(product.id),
                       onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => AddToBasket(product: product),
-                          ),
-                        );
+                        await Get.to(() => AddToBasket(product: product));
 
                         if (mounted) {
                           setState(() {});
@@ -210,12 +205,8 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                     return GestureDetector(
                       key: ValueKey(product.id),
                       onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => AddToBasket(product: product),
-                          ),
-                        );
+                        await Get.to(() => AddToBasket(product: product),);
+
                         if (mounted) {
                           setState(() {});
                         }
