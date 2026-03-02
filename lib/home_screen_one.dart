@@ -72,13 +72,10 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FavoritesScreen(),
-                  ),
-                ).then((_) => setState(() {}));
+                Get.back(); // Closes current drawer/dialog/screen
+                Get.to(() => const FavoritesScreen())?.then((_) {
+                  setState(() {}); // If still using StatefulWidget
+                });
               },
             ),
 
