@@ -10,6 +10,8 @@ import 'controller/user_controller.dart';
 import 'package:get/get.dart';
 
 class HomeScreenOne extends StatefulWidget {
+  HomeScreenOne({super.key});
+
   final UserController userController = Get.find();
 
   @override
