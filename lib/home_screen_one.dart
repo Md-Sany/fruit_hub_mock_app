@@ -72,9 +72,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 ),
               ),
               onTap: () {
-                Get.back(); // Closes current drawer/dialog/screen
+                Get.back();
                 Get.to(() => const FavoritesScreen())?.then((_) {
-                  setState(() {}); // If still using StatefulWidget
+                  setState(() {});
                 });
               },
             ),
