@@ -16,7 +16,6 @@ class FavoritesScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Header Section
           Container(
             height: 160.h,
             padding: EdgeInsets.only(top: 30.h, left: 24.w),

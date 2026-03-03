@@ -15,11 +15,9 @@ class AddToBasket extends StatefulWidget {
 }
 
 class _AddToBasketState extends State<AddToBasket> {
-  // 1. Find the existing Controller instances
   final BasketController basketController = Get.find<BasketController>();
   final ProductController productController = Get.find<ProductController>();
 
-  // 2. Quantity as an observable
   final RxInt quantity = 1.obs;
 
   double get unitPrice => double.parse(widget.product.price.replaceAll(',', ''));
@@ -30,7 +28,6 @@ class _AddToBasketState extends State<AddToBasket> {
       backgroundColor: const Color(0xffFFA451),
       body: Column(
         children: [
-          // Header & Image Section
           SizedBox(
             height: 350.h,
             child: Stack(
@@ -39,7 +36,7 @@ class _AddToBasketState extends State<AddToBasket> {
                   top: 50.h,
                   left: 24.w,
                   child: GestureDetector(
-                    onTap: () => Get.back(), // Use GetX navigation
+                    onTap: () => Get.back(),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
@@ -69,7 +66,6 @@ class _AddToBasketState extends State<AddToBasket> {
             ),
           ),
 
-          // Details Section
           Expanded(
             child: Container(
               width: double.infinity,
@@ -94,7 +90,6 @@ class _AddToBasketState extends State<AddToBasket> {
                   ),
                   SizedBox(height: 20.h),
 
-                  // Quantity and Dynamic Price Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -105,7 +100,6 @@ class _AddToBasketState extends State<AddToBasket> {
                           }),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            // 3. Wrap quantity text in Obx
                             child: Obx(() => Text(
                                 "${quantity.value}",
                                 style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold)
@@ -115,7 +109,6 @@ class _AddToBasketState extends State<AddToBasket> {
                               color: const Color(0xffFFF2E7), iconColor: const Color(0xffFFA451)),
                         ],
                       ),
-                      // 4. Wrap total price in Obx
                       Obx(() => Text(
                         "৳ ${(unitPrice * quantity.value).toStringAsFixed(0)}",
                         style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: const Color(0xFF27214D)),
@@ -140,11 +133,9 @@ class _AddToBasketState extends State<AddToBasket> {
                     ),
                   ),
 
-                  // Bottom Buttons Row
                   SafeArea(
                     child: Row(
                       children: [
-                        // 5. Reactive Favorite Button
                         Obx(() {
                           bool isFav = productController.isFavorite(widget.product.id);
                           return GestureDetector(
@@ -167,7 +158,6 @@ class _AddToBasketState extends State<AddToBasket> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              // 6. Use the basketController instance
                               basketController.addToBasket(widget.product, quantity.value);
 
                               Get.bottomSheet(
