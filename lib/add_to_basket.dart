@@ -5,18 +5,25 @@ import 'model/product.dart';
 import 'model/basket_manager.dart';
 import 'package:get/get.dart';
 
-class AddToBasket extends StatelessWidget {
+class AddToBasket extends StatefulWidget {
   final Product product;
 
-  // Local reactive variable for quantity
+  const AddToBasket({super.key, required this.product});
+
+
+  @override
+  State<AddToBasket> createState() => _AddToBasketState();
+}
+
+class _AddToBasketState extends State<AddToBasket> {
+  final BasketController basketController = Get.find<BasketController>();
   final RxInt quantity = 1.obs;
 
-  AddToBasket({super.key, required this.product});
+  double get unitPrice => double.parse(widget.product.price.replaceAll(',', ''));
 
   @override
   Widget build(BuildContext context) {
-    final BasketController basketController = Get.find();
-    final ProductController productController = Get.find();
+    bool currentFavoriteStatus = ProductController().isFavorite(widget.product.id);
 
     return Scaffold(
       backgroundColor: const Color(0xffFFA451),
@@ -30,7 +37,7 @@ class AddToBasket extends StatelessWidget {
                   top: 50.h,
                   left: 24.w,
                   child: GestureDetector(
-                    onTap: () => Get.back(),
+                    onTap: () => Navigator.pop(context),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
@@ -39,7 +46,7 @@ class AddToBasket extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.arrow_back_ios, size: 14.sp, color: Colors.black),
+                          Icon(Icons.arrow_back_ios, size: 16.sp, color: Colors.black),
                           Text("Go back", style: TextStyle(fontSize: 14.sp, color: Colors.black)),
                         ],
                       ),
@@ -48,8 +55,12 @@ class AddToBasket extends StatelessWidget {
                 ),
                 Center(
                   child: Hero(
-                      tag: product.id,
-                      child: Image.asset(product.image, height: 200.h)
+                    tag: widget.product.id,
+                    child: Image.asset(
+                      widget.product.image,
+                      height: 200.h,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ],
@@ -61,16 +72,23 @@ class AddToBasket extends StatelessWidget {
               padding: EdgeInsets.all(24.r),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.r),
+                  topRight: Radius.circular(30.r),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
-                    style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold, color: const Color(0xFF27214D)),
+                    widget.product.name,
+                    style: TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF27214D),
+                    ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 20.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -81,85 +99,97 @@ class AddToBasket extends StatelessWidget {
                           }),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: Obx(() => Text(
-                              "${quantity.value}",
-                              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500),
-                            )),
+                            child: Text("$quantity", style: TextStyle(fontSize: 20.sp)),
                           ),
                           _buildQuantityBtn(Icons.add, () => quantity.value++,
-                              color: const Color(0xffFFF2E7),
-                              iconColor: const Color(0xffFFA451)
-                          ),
+                              color: const Color(0xffFFF2E7), iconColor: const Color(0xffFFA451)),
                         ],
                       ),
-                      Text(
-                        "৳ ${product.price}",
+                      Obx(() => Text(
+                        "৳ ${(unitPrice * quantity.value).toStringAsFixed(0)}",
                         style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: const Color(0xFF27214D)),
-                      ),
+                      )),
                     ],
                   ),
-                  const Divider(height: 40),
+                  SizedBox(height: 30.h),
+                  Divider(color: Colors.grey.withValues(alpha: 0.5)),
+                  SizedBox(height: 20.h),
                   Text(
                     "One Pack Contains:",
-                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: const Color(0xFF27214D)),
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                      decorationColor: const Color(0xffFFA451),
+                    ),
                   ),
-                  Container(
-                    width: 150.w,
-                    height: 2.h,
-                    color: const Color(0xffFFA451),
-                  ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 10.h),
                   Expanded(
                     child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
                       child: Text(
-                        product.description,
-                        style: TextStyle(fontSize: 14.sp, color: const Color(0xFF27214D), height: 1.5),
+                        widget.product.description,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: const Color(0xFF27214D),
+                          height: 1.5,
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
-                  Row(
-                    children: [
-                      Obx(() => GestureDetector(
-                        onTap: () => productController.toggleFavorite(product.id),
-                        child: Container(
-                          padding: EdgeInsets.all(12.r),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFFF7F0),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            productController.isFavorite(product.id)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: const Color(0xffFFA451),
-                            size: 28.sp,
-                          ),
-                        ),
-                      )),
-                      SizedBox(width: 20.w),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            basketController.addToBasket(product, quantity.value);
-                            Get.bottomSheet(
-                              const BasketListSheet(),
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                            );
+                  SafeArea(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              ProductController().toggleFavorite(widget.product.id);
+                            });
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xffFFA451),
-                            padding: EdgeInsets.symmetric(vertical: 16.h),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: Text(
-                            "Add to basket",
-                            style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          child: Container(
+                            padding: EdgeInsets.all(12.r),
+                            decoration: BoxDecoration(
+                              color: const Color(0xffFFF2E7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                                currentFavoriteStatus ? Icons.favorite : Icons.favorite_border,
+                                color: const Color(0xffFFA451),
+                                size: 28.sp
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 20.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              BasketController().addToBasket(widget.product, quantity.value);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Added to basket!"),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => const BasketListSheet(),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xffFFA451),
+                              padding: EdgeInsets.symmetric(vertical: 16.h),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                            ),
+                            child: Text(
+                              "Add to basket",
+                              style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -177,7 +207,7 @@ class AddToBasket extends StatelessWidget {
         padding: EdgeInsets.all(4.r),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: color == null ? Border.all(color: Colors.grey.shade300) : null,
+          border: color == null ? Border.all(color: Colors.grey) : null,
           color: color,
         ),
         child: Icon(icon, size: 20.sp, color: iconColor ?? Colors.black),
