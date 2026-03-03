@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'welcome_screen.dart';
+import 'package:get/get.dart';
 
 class CustomSplashScreen extends StatefulWidget {
   const CustomSplashScreen({super.key});
@@ -32,9 +33,7 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
     FlutterNativeSplash.remove();
 
     // 4. NAVIGATE to the Main App Screen.
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-    );
+    Get.off(() => const WelcomeScreen());
   }
 
   @override

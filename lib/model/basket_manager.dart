@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'product.dart';
 
 class BasketItem {
@@ -12,66 +13,63 @@ class BasketItem {
   }
 }
 
-class BasketManager {
-  static final BasketManager _instance = BasketManager._internal();
-  factory BasketManager() => _instance;
-  BasketManager._internal();
-
-  final List<BasketItem> _items = [];
-
-  List<BasketItem> get items => _items;
+class BasketController extends GetxController {
+  // Reactive list of basket items
+  var items = <BasketItem>[].obs;
 
   void addToBasket(Product product, int quantity) {
-    int index = _items.indexWhere((item) => item.product.id == product.id);
+    int index = items.indexWhere((item) => item.product.id == product.id);
 
     if (index != -1) {
-      _items[index].quantity += quantity;
+      items[index].quantity += quantity;
+      items.refresh(); // Manually trigger update for list item change
     } else {
-      _items.add(BasketItem(product: product, quantity: quantity));
+      items.add(BasketItem(product: product, quantity: quantity));
     }
   }
 
   void removeAt(int index) {
-    _items.removeAt(index);
+    items.removeAt(index);
   }
 
   void clearBasket() {
-    _items.clear();
+    items.clear();
   }
 
   double get totalAmount {
     double total = 0;
-    for (var item in _items) {
-      double price = double.parse(item.product.price.replaceAll(',', ''));
-      total += price * item.quantity;
+    for (var item in items) {
+      total += item.totalItemPrice;
     }
     return total;
   }
 }
 
-class ProductManager {
-  static final ProductManager _instance = ProductManager._internal();
-  factory ProductManager() => _instance;
-  ProductManager._internal();
+class ProductController extends GetxController {
+  // Reactive lists of products
+  var recommended = recommendedProducts.obs;
+  var filtered = filteredProducts.obs;
 
   void toggleFavorite(String productId) {
-    final recIndex = recommendedProducts.indexWhere((p) => p.id == productId);
+    // Update in recommended list
+    int recIndex = recommended.indexWhere((p) => p.id == productId);
     if (recIndex != -1) {
-      recommendedProducts[recIndex] = recommendedProducts[recIndex].copyWith(
-        isFavorite: !recommendedProducts[recIndex].isFavorite,
+      recommended[recIndex] = recommended[recIndex].copyWith(
+        isFavorite: !recommended[recIndex].isFavorite,
       );
     }
 
-    final filtIndex = filteredProducts.indexWhere((p) => p.id == productId);
+    // Update in filtered list
+    int filtIndex = filtered.indexWhere((p) => p.id == productId);
     if (filtIndex != -1) {
-      filteredProducts[filtIndex] = filteredProducts[filtIndex].copyWith(
-        isFavorite: !filteredProducts[filtIndex].isFavorite,
+      filtered[filtIndex] = filtered[filtIndex].copyWith(
+        isFavorite: !filtered[filtIndex].isFavorite,
       );
     }
   }
 
   bool isFavorite(String productId) {
-    final allProducts = [...recommendedProducts, ...filteredProducts];
-    return allProducts.firstWhere((p) => p.id == productId).isFavorite;
+    final all = [...recommended, ...filtered];
+    return all.firstWhere((p) => p.id == productId).isFavorite;
   }
 }

@@ -3,10 +3,13 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'custom_splash_screen.dart';
+import 'model/basket_manager.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  Get.put(BasketController());
+  Get.put(ProductController());
   runApp(const MyApp());
 }
 

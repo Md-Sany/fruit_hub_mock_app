@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'add_to_basket.dart';
 import 'model/basket_manager.dart';
 import 'order_list.dart';
@@ -7,18 +8,20 @@ import 'model/product.dart';
 import 'favorites_screen.dart';
 import 'track_order.dart';
 import 'controller/user_controller.dart';
-import 'package:get/get.dart';
 
 class HomeScreenOne extends StatefulWidget {
-  HomeScreenOne({super.key});
-
-  final UserController userController = Get.find();
+  const HomeScreenOne({super.key});
 
   @override
   State<HomeScreenOne> createState() => _HomeScreenOneState();
 }
 
 class _HomeScreenOneState extends State<HomeScreenOne> {
+  // Finding or Initializing Controllers
+  final UserController userController = Get.find();
+  final ProductController productController = Get.put(ProductController());
+  final BasketController basketController = Get.put(BasketController());
+
   final List<String> _list = ['Hottest', 'Popular', 'New combo', 'Top'];
   int _selectedFilterIndex = 0;
 
@@ -26,85 +29,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // Drawer Header
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Color(0xffFFA451)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30.r,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 40.sp,
-                      color: const Color(0xffFFA451),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Obx(
-                    () => Text(
-                      'Hello, ${widget.userController.userName.value}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // 1. My Favorites Tile
-            ListTile(
-              leading: const Icon(Icons.favorite, color: Color(0xffFFA451)),
-              title: Text(
-                'My Favorites',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: const Color(0xFF27214D),
-                ),
-              ),
-              onTap: () {
-                Get.back();
-                Get.to(() => const FavoritesScreen())?.then((_) {
-                  setState(() {});
-                });
-              },
-            ),
-
-            // 2. Track Order Tile
-            ListTile(
-              leading: const Icon(
-                Icons.local_shipping,
-                color: Color(0xffFFA451),
-              ),
-              title: Text(
-                'Track Order',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: const Color(0xFF27214D),
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TrackOrder()),
-                );
-              },
-            ),
-
-            const Divider(),
-          ],
-        ),
-      ),
+      drawer: _buildDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -112,49 +37,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Builder(
-                    builder: (context) => IconButton(
-                      icon: Icon(Icons.drag_handle, size: 32.sp),
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => OrderList()),
-                      );
-                    },
-                    child: Image.asset('assets/Group 25.png', width: 44.w),
-                  ),
-                ],
-              ),
+              _buildTopBar(context),
               SizedBox(height: 24.h),
-              Obx(
-                    () => RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          color: const Color(0xFF27214D),
-                        ),
-                        children: [
-                          TextSpan(text: 'Hello ${widget.userController.userName.value}, '),
-                          TextSpan(
-                            text: 'What fruit salad combo do you want today?',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-              ),
+              _buildGreeting(),
               SizedBox(height: 24.h),
               _buildSearchBar(),
               SizedBox(height: 32.h),
@@ -163,62 +48,161 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
                 style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20.h),
-              SizedBox(
-                height: 200.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: recommendedProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = recommendedProducts[index];
-
-                    return GestureDetector(
-                      key: ValueKey(product.id),
-                      onTap: () async {
-                        await Get.to(() => AddToBasket(product: product));
-
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 16.w),
-                        child: _buildStandardCard(recommendedProducts[index]),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _buildRecommendedList(),
               SizedBox(height: 40.h),
               _buildFilterBar(),
               SizedBox(height: 20.h),
-              SizedBox(
-                height: 200.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: filteredProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = filteredProducts[index];
-
-                    return GestureDetector(
-                      key: ValueKey(product.id),
-                      onTap: () async {
-                        await Get.to(() => AddToBasket(product: product),);
-
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 16.w),
-                        child: _buildStandardCard(filteredProducts[index]),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _buildFilteredList(),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGreeting() {
+    return Obx(
+          () => RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: 20.sp,
+            color: const Color(0xFF27214D),
+          ),
+          children: [
+            TextSpan(text: 'Hello ${userController.userName.value}, '),
+            TextSpan(
+              text: 'What fruit salad combo do you want today?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.sp,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.drag_handle, size: 32.sp),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        GestureDetector(
+          onTap: () => Get.to(() => const OrderList()),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Image.asset('assets/Group 25.png', width: 44.w),
+              Obx(() => basketController.items.isEmpty
+                  ? const SizedBox.shrink()
+                  : Positioned(
+                right: -5,
+                top: -5,
+                child: CircleAvatar(
+                  radius: 10.r,
+                  backgroundColor: const Color(0xffFFA451),
+                  child: Text(
+                    '${basketController.items.length}',
+                    style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                  ),
+                ),
+              )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecommendedList() {
+    return SizedBox(
+      height: 200.h,
+      child: Obx(() => ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: productController.recommended.length,
+        itemBuilder: (context, index) {
+          final product = productController.recommended[index];
+          return GestureDetector(
+            onTap: () => Get.to(() => AddToBasket(product: product)),
+            child: Padding(
+              padding: EdgeInsets.only(right: 16.w),
+              child: _buildStandardCard(product),
+            ),
+          );
+        },
+      )),
+    );
+  }
+
+  Widget _buildFilteredList() {
+    return SizedBox(
+      height: 200.h,
+      child: Obx(() => ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: productController.filtered.length,
+        itemBuilder: (context, index) {
+          final product = productController.filtered[index];
+          return GestureDetector(
+            onTap: () => Get.to(() => AddToBasket(product: product)),
+            child: Padding(
+              padding: EdgeInsets.only(right: 16.w),
+              child: _buildStandardCard(product),
+            ),
+          );
+        },
+      )),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Color(0xffFFA451)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CircleAvatar(
+                  radius: 30.r,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, size: 40.sp, color: const Color(0xffFFA451)),
+                ),
+                SizedBox(height: 10.h),
+                Obx(() => Text(
+                  'Hello, ${userController.userName.value}',
+                  style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
+                )),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.favorite, color: Color(0xffFFA451)),
+            title: const Text('My Favorites'),
+            onTap: () {
+              Get.back();
+              Get.to(() => const FavoritesScreen());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.local_shipping, color: Color(0xffFFA451)),
+            title: const Text('Track Order'),
+            onTap: () {
+              Get.back();
+              Get.to(() => const TrackOrder());
+            },
+          ),
+          const Divider(),
+        ],
       ),
     );
   }
@@ -270,12 +254,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               margin: EdgeInsets.only(right: 25.w),
               decoration: BoxDecoration(
                 border: isSelected
-                    ? Border(
-                        bottom: BorderSide(
-                          color: const Color(0xFFFFA451),
-                          width: 2.h,
-                        ),
-                      )
+                    ? Border(bottom: BorderSide(color: const Color(0xFFFFA451), width: 2.h))
                     : null,
               ),
               child: Text(
@@ -294,7 +273,6 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
   }
 
   Widget _buildStandardCard(Product product) {
-    bool isFav = ProductManager().isFavorite(product.id);
     return Container(
       width: 155.w,
       padding: EdgeInsets.all(12.r),
@@ -303,7 +281,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -314,13 +292,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
           Align(
             alignment: Alignment.topRight,
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  ProductManager().toggleFavorite(product.id);
-                });
-              },
+              onTap: () => productController.toggleFavorite(product.id),
               child: Icon(
-                isFav ? Icons.favorite : Icons.favorite_border,
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: const Color(0xffFFA451),
                 size: 20.sp,
               ),
@@ -347,23 +321,19 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
               ),
               GestureDetector(
                 onTap: () {
-                  BasketManager().addToBasket(product, 1);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("${product.name} added to basket!"),
-                      duration: const Duration(seconds: 1),
-                    ),
+                  basketController.addToBasket(product, 1);
+                  Get.snackbar(
+                    "Added!",
+                    "${product.name} added to basket",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: const Color(0xFFFFF2E7),
+                    colorText: const Color(0xffFFA451),
                   );
                 },
                 child: CircleAvatar(
                   radius: 12.r,
                   backgroundColor: const Color(0xffFFF2E7),
-                  child: Icon(
-                    Icons.add,
-                    color: const Color(0xffFFA451),
-                    size: 16.sp,
-                  ),
+                  child: Icon(Icons.add, color: const Color(0xffFFA451), size: 16.sp),
                 ),
               ),
             ],

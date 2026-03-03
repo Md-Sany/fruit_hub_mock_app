@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'add_to_basket.dart';
 import 'model/product.dart';
-import 'model/basket_manager.dart';
+import 'model/basket_manager.dart'; // Ensure this contains the ProductController
 
-class FavoritesScreen extends StatefulWidget {
+class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
-  State<FavoritesScreen> createState() => _FavoritesScreenState();
-}
-
-class _FavoritesScreenState extends State<FavoritesScreen> {
-  @override
   Widget build(BuildContext context) {
-    final allProducts = [...recommendedProducts, ...filteredProducts];
-    final favoriteProducts = allProducts
-        .where((p) => ProductManager().isFavorite(p.id))
-        .toList();
+    // Find the existing ProductController
+    final ProductController productController = Get.find<ProductController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          // Header Section
           Container(
             height: 160.h,
             padding: EdgeInsets.only(top: 30.h, left: 24.w),
@@ -30,7 +25,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Get.back(),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                     decoration: BoxDecoration(
@@ -40,8 +35,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.arrow_back_ios, size: 14.sp, color: Colors.black),
-                        Text("Go back",
-                            style: TextStyle(fontSize: 14.sp, color: Colors.black)
+                        Text(
+                          "Go back",
+                          style: TextStyle(fontSize: 14.sp, color: Colors.black, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -51,68 +47,61 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 Text(
                   "My Favorites",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w500
+                    fontSize: 24.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
 
+          // Reactive Favorites Grid
           Expanded(
-            child: favoriteProducts.isEmpty
-                ? _buildEmptyState()
-                : GridView.builder(
-              padding: EdgeInsets.all(24.r),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 16.w,
-                mainAxisSpacing: 16.h,
-              ),
-              itemCount: favoriteProducts.length,
-              itemBuilder: (context, index) {
-                final product = allProducts[index];
-                return GestureDetector(
-                  key: ValueKey(product.id),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AddToBasket(product: product),
+            child: Obx(() {
+              // Combine all products and filter by favorite status reactively
+              final favoriteProducts = [...productController.recommended, ...productController.filtered]
+                  .where((p) => p.isFavorite)
+                  .toList();
+
+              if (favoriteProducts.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.favorite_border, size: 80.sp, color: Colors.grey.shade300),
+                      SizedBox(height: 16.h),
+                      Text(
+                        "No favorites yet!",
+                        style: TextStyle(fontSize: 18.sp, color: Colors.grey),
                       ),
-                    );
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                  child: _buildFavoriteCard(favoriteProducts[index]),
+                    ],
+                  ),
                 );
-              },
-            ),
+              }
+
+              return GridView.builder(
+                padding: EdgeInsets.all(24.r),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: 16.h,
+                ),
+                itemCount: favoriteProducts.length,
+                itemBuilder: (context, index) {
+                  final product = favoriteProducts[index];
+                  return _buildFavoriteCard(product, productController);
+                },
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.favorite_border, size: 80.sp, color: Colors.grey[300]),
-          SizedBox(height: 16.h),
-          Text("No favorites yet!",
-              style: TextStyle(fontSize: 18.sp, color: Colors.grey)
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFavoriteCard(Product product) {
+  Widget _buildFavoriteCard(Product product, ProductController controller) {
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
@@ -130,19 +119,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           Align(
             alignment: Alignment.topRight,
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  ProductManager().toggleFavorite(product.id);
-                });
-              },
+              onTap: () => controller.toggleFavorite(product.id),
               child: Icon(
-                  Icons.favorite,
-                  color: const Color(0xffFFA451),
-                  size: 20.sp
+                Icons.favorite,
+                color: const Color(0xffFFA451),
+                size: 22.sp,
               ),
             ),
           ),
-          Expanded(child: Image.asset(product.image, fit: BoxFit.contain)),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => Get.to(() => AddToBasket(product: product)),
+              child: Image.asset(product.image, fit: BoxFit.contain),
+            ),
+          ),
           SizedBox(height: 8.h),
           Text(
             product.name,
@@ -151,12 +141,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
+          SizedBox(height: 4.h),
           Text(
             "৳${product.price}",
             style: TextStyle(
-                color: const Color(0xFFF08626),
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold
+              color: const Color(0xFFF08626),
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'model/basket_manager.dart';
 import 'order_complete.dart';
+import 'package:get/get.dart';
 
 class InputCardDetails extends StatefulWidget {
   const InputCardDetails({super.key});
@@ -12,8 +13,10 @@ class InputCardDetails extends StatefulWidget {
 }
 
 class _InputCardDetailsState extends State<InputCardDetails> {
-  final _formKey = GlobalKey<FormState>();
+  // 1. Reference the existing instance found via Get.find
+  final BasketController basketController = Get.find<BasketController>();
 
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _cardNumberController = TextEditingController();
   final _dateController = TextEditingController();
@@ -30,12 +33,11 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 
   void _completeOrder() {
     if (_formKey.currentState!.validate()) {
-      BasketManager().clearBasket();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const OrderComplete()),
-            (route) => false,
-      );
+      // 2. Clear the ACTUAL basket using the found instance
+      basketController.clearBasket();
+
+      // 3. Use GetX to navigate and wipe the history stack
+      Get.offAll(() => const OrderComplete());
     }
   }
 
@@ -117,10 +119,8 @@ class _InputCardDetailsState extends State<InputCardDetails> {
                                     validator: (val) {
                                       if (val == null || val.isEmpty) return "Enter date";
                                       if (val.length < 5) return "Invalid format";
-
                                       int month = int.parse(val.substring(0, 2));
                                       if (month < 1 || month > 12) return "Invalid month";
-
                                       return null;
                                     },
                                   ),
@@ -195,7 +195,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
               Positioned(
                 top: 20.h,
                 child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Get.back(), // Use GetX back
                   child: Container(
                     height: 48.r,
                     width: 48.r,

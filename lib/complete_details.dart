@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'order_complete.dart';
 import 'model/basket_manager.dart';
 import 'input_card_details.dart';
+import 'package:get/get.dart';
 
 class CompleteDetailsBottomSheet extends StatefulWidget {
   const CompleteDetailsBottomSheet({super.key});
@@ -12,8 +13,10 @@ class CompleteDetailsBottomSheet extends StatefulWidget {
 }
 
 class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet> {
-  final _formKey = GlobalKey<FormState>();
+  // Find the existing BasketController instance
+  final BasketController basketController = Get.find<BasketController>();
 
+  final _formKey = GlobalKey<FormState>();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
 
@@ -27,20 +30,18 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
   void _processPayment(bool isCard) {
     if (_formKey.currentState!.validate()) {
       if (isCard) {
-        showModalBottomSheet(
-          context: context,
+        // Use GetX BottomSheet for consistency
+        Get.bottomSheet(
+          const InputCardDetails(),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const InputCardDetails(),
         );
       } else {
-        BasketManager().clearBasket();
-        Navigator.pop(context);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const OrderComplete()),
-              (route) => false,
-        );
+        // Use the controller instance to clear the basket
+        basketController.clearBasket();
+
+        // Use GetX to clear the stack and move to the success screen
+        Get.offAll(() => const OrderComplete());
       }
     }
   }
@@ -48,6 +49,7 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
   @override
   Widget build(BuildContext context) {
     return Padding(
+      // This ensures the sheet moves up when the keyboard appears
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Stack(
         alignment: Alignment.topCenter,
@@ -133,10 +135,12 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
               ),
             ),
           ),
+
+          // Floating Close Button
           Positioned(
             top: 20.h,
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Get.back(), // GetX version of pop
               child: Container(
                 height: 48.r,
                 width: 48.r,
@@ -202,7 +206,7 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(color: const Color(0xffFFA451), fontSize: 14.sp),
+        style: TextStyle(color: const Color(0xffFFA451), fontSize: 14.sp, fontWeight: FontWeight.bold),
       ),
     );
   }
