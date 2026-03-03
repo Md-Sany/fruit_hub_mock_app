@@ -13,7 +13,6 @@ class OrderComplete extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        // If they try to use system back button, force them to Home and clear stack
         Get.offAll(() => HomeScreenOne());
       },
       child: Scaffold(
@@ -43,13 +42,14 @@ class OrderComplete extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 40.h),
+              SizedBox(height: 56.h),
+
               Text(
                 "Congratulations!!!",
                 style: TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF27214D)
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF27214D),
                 ),
               ),
               SizedBox(height: 16.h),
@@ -57,41 +57,46 @@ class OrderComplete extends StatelessWidget {
                 "Your order have been taken and is being attended to",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20.sp,
-                    color: const Color(0xFF27214D)
+                  fontSize: 20.sp,
+                  color: const Color(0xFF27214D),
+                  height: 1.2,
                 ),
               ),
-              SizedBox(height: 60.h),
+              SizedBox(height: 56.h),
 
-              // Navigation Buttons
               SizedBox(
-                width: 150.w,
+                width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.to(() => const TrackOrder()),
+                  onPressed: () {
+                    Get.to(() => const TrackOrder());
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffFFA451),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                   ),
                   child: Text(
-                      "Track order",
-                      style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)
+                    "Track order",
+                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
                   ),
                 ),
               ),
               SizedBox(height: 20.h),
+
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () => Get.offAll(() => HomeScreenOne()),
+                  onPressed: () {
+                    Get.offAll(() => HomeScreenOne());
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Color(0xffFFA451)),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                   ),
                   child: Text(
-                      "Continue shopping",
-                      style: TextStyle(color: const Color(0xffFFA451), fontSize: 16.sp, fontWeight: FontWeight.bold)
+                    "Continue shopping",
+                    style: TextStyle(color: const Color(0xffFFA451), fontSize: 16.sp),
                   ),
                 ),
               ),

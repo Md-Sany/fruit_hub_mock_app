@@ -13,7 +13,6 @@ class CompleteDetailsBottomSheet extends StatefulWidget {
 }
 
 class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet> {
-  // Find the existing BasketController instance
   final BasketController basketController = Get.find<BasketController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -30,17 +29,14 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
   void _processPayment(bool isCard) {
     if (_formKey.currentState!.validate()) {
       if (isCard) {
-        // Use GetX BottomSheet for consistency
         Get.bottomSheet(
           const InputCardDetails(),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
         );
       } else {
-        // Use the controller instance to clear the basket
         basketController.clearBasket();
 
-        // Use GetX to clear the stack and move to the success screen
         Get.offAll(() => const OrderComplete());
       }
     }
@@ -49,7 +45,6 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      // This ensures the sheet moves up when the keyboard appears
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Stack(
         alignment: Alignment.topCenter,
@@ -136,11 +131,10 @@ class _CompleteDetailsBottomSheetState extends State<CompleteDetailsBottomSheet>
             ),
           ),
 
-          // Floating Close Button
           Positioned(
             top: 20.h,
             child: GestureDetector(
-              onTap: () => Get.back(), // GetX version of pop
+              onTap: () => Get.back(),
               child: Container(
                 height: 48.r,
                 width: 48.r,

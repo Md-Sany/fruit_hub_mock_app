@@ -14,7 +14,6 @@ class BasketItem {
 }
 
 class BasketController extends GetxController {
-  // Reactive list of basket items
   var items = <BasketItem>[].obs;
 
   void addToBasket(Product product, int quantity) {
@@ -22,7 +21,7 @@ class BasketController extends GetxController {
 
     if (index != -1) {
       items[index].quantity += quantity;
-      items.refresh(); // Manually trigger update for list item change
+      items.refresh();
     } else {
       items.add(BasketItem(product: product, quantity: quantity));
     }
@@ -46,12 +45,10 @@ class BasketController extends GetxController {
 }
 
 class ProductController extends GetxController {
-  // Reactive lists of products
   var recommended = recommendedProducts.obs;
   var filtered = filteredProducts.obs;
 
   void toggleFavorite(String productId) {
-    // Update in recommended list
     int recIndex = recommended.indexWhere((p) => p.id == productId);
     if (recIndex != -1) {
       recommended[recIndex] = recommended[recIndex].copyWith(
@@ -59,7 +56,6 @@ class ProductController extends GetxController {
       );
     }
 
-    // Update in filtered list
     int filtIndex = filtered.indexWhere((p) => p.id == productId);
     if (filtIndex != -1) {
       filtered[filtIndex] = filtered[filtIndex].copyWith(

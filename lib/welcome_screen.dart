@@ -46,7 +46,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          // Using Expanded + Spacer to pin the button to the bottom
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -70,7 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: const Color(0xFF666666),
                     ),
                   ),
-                  const Spacer(), // Pushes the button to the bottom
+                  const Spacer(),
                   SafeArea(
                     top: false,
                     bottom: true,
@@ -95,7 +94,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h), // Fixed distance from bottom
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),

@@ -13,7 +13,6 @@ class InputCardDetails extends StatefulWidget {
 }
 
 class _InputCardDetailsState extends State<InputCardDetails> {
-  // 1. Reference the existing instance found via Get.find
   final BasketController basketController = Get.find<BasketController>();
 
   final _formKey = GlobalKey<FormState>();
@@ -33,10 +32,8 @@ class _InputCardDetailsState extends State<InputCardDetails> {
 
   void _completeOrder() {
     if (_formKey.currentState!.validate()) {
-      // 2. Clear the ACTUAL basket using the found instance
       basketController.clearBasket();
 
-      // 3. Use GetX to navigate and wipe the history stack
       Get.offAll(() => const OrderComplete());
     }
   }
@@ -195,7 +192,7 @@ class _InputCardDetailsState extends State<InputCardDetails> {
               Positioned(
                 top: 20.h,
                 child: GestureDetector(
-                  onTap: () => Get.back(), // Use GetX back
+                  onTap: () => Get.back(),
                   child: Container(
                     height: 48.r,
                     width: 48.r,

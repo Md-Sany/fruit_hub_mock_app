@@ -17,7 +17,6 @@ class HomeScreenOne extends StatefulWidget {
 }
 
 class _HomeScreenOneState extends State<HomeScreenOne> {
-  // Finding or Initializing Controllers
   final UserController userController = Get.find();
   final ProductController productController = Get.put(ProductController());
   final BasketController basketController = Get.put(BasketController());

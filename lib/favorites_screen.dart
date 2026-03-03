@@ -3,14 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'add_to_basket.dart';
 import 'model/product.dart';
-import 'model/basket_manager.dart'; // Ensure this contains the ProductController
+import 'model/basket_manager.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Find the existing ProductController
     final ProductController productController = Get.find<ProductController>();
 
     return Scaffold(
@@ -56,10 +55,8 @@ class FavoritesScreen extends StatelessWidget {
             ),
           ),
 
-          // Reactive Favorites Grid
           Expanded(
             child: Obx(() {
-              // Combine all products and filter by favorite status reactively
               final favoriteProducts = [...productController.recommended, ...productController.filtered]
                   .where((p) => p.isFavorite)
                   .toList();
