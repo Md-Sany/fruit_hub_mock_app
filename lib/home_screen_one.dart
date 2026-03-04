@@ -131,7 +131,8 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             onTap: () => Get.to(() => AddToBasket(product: product)),
             child: Padding(
               padding: EdgeInsets.only(right: 16.w),
-              child: _buildStandardCard(product, true), // Recommended always has color
+              // Recommended should always be white/transparent background
+              child: _buildStandardCard(product, false),
             ),
           );
         },
@@ -148,8 +149,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         itemBuilder: (context, index) {
           final product = productController.filtered[index];
 
-          // Only show background color for the first 3 items in Hottest, Popular, or New Combo
-          bool showBackground = index < 3 && productController.selectedFilterIndex.value != 3;
+          // Show background only for the 1st item (index == 0)
+          // and not if the 'Top' filter (index 3) is selected
+          bool showBackground = index == 0 && productController.selectedFilterIndex.value != 3;
 
           return GestureDetector(
             onTap: () => Get.to(() => AddToBasket(product: product)),
@@ -252,7 +254,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
           return Obx(() {
             final isSelected = index == productController.selectedFilterIndex.value;
             return GestureDetector(
-              onTap: () => productController.updateFilter(index), // Sorts automatically
+              onTap: () => productController.updateFilter(index),
               child: Container(
                 margin: EdgeInsets.only(right: 25.w),
                 decoration: BoxDecoration(
@@ -279,7 +281,6 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
       width: 155.w,
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        // Logic: Use product's color if showBackground is true, else transparent
         color: showBackground ? (product.backgroundColor ?? Colors.white) : Colors.transparent,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: showBackground
