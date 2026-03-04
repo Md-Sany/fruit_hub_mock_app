@@ -22,11 +22,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
   final BasketController basketController = Get.put(BasketController());
 
   final List<String> _list = ['Hottest', 'Popular', 'New combo', 'Top'];
-  int _selectedFilterIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    print('scaffold');
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: _buildDrawer(),
@@ -133,7 +131,7 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             onTap: () => Get.to(() => AddToBasket(product: product)),
             child: Padding(
               padding: EdgeInsets.only(right: 16.w),
-              child: _buildStandardCard(product),
+              child: _buildStandardCard(product, true), // Recommended always has color
             ),
           );
         },
@@ -149,11 +147,15 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         itemCount: productController.filtered.length,
         itemBuilder: (context, index) {
           final product = productController.filtered[index];
+
+          // Only show background color for the first 3 items in Hottest, Popular, or New Combo
+          bool showBackground = index < 3 && productController.selectedFilterIndex.value != 3;
+
           return GestureDetector(
             onTap: () => Get.to(() => AddToBasket(product: product)),
             child: Padding(
               padding: EdgeInsets.only(right: 16.w),
-              child: _buildStandardCard(product),
+              child: _buildStandardCard(product, showBackground),
             ),
           );
         },
@@ -247,45 +249,48 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         scrollDirection: Axis.horizontal,
         itemCount: _list.length,
         itemBuilder: (context, index) {
-          final isSelected = index == _selectedFilterIndex;
-          return GestureDetector(
-            onTap: () => setState(() => _selectedFilterIndex = index),
-            child: Container(
-              margin: EdgeInsets.only(right: 25.w),
-              decoration: BoxDecoration(
-                border: isSelected
-                    ? Border(bottom: BorderSide(color: const Color(0xFFFFA451), width: 2.h))
-                    : null,
-              ),
-              child: Text(
-                _list[index],
-                style: TextStyle(
-                  fontSize: isSelected ? 20.sp : 16.sp,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? const Color(0xFF27214D) : Colors.grey,
+          return Obx(() {
+            final isSelected = index == productController.selectedFilterIndex.value;
+            return GestureDetector(
+              onTap: () => productController.updateFilter(index), // Sorts automatically
+              child: Container(
+                margin: EdgeInsets.only(right: 25.w),
+                decoration: BoxDecoration(
+                  border: isSelected ? Border(bottom: BorderSide(color: const Color(0xFFFFA451), width: 2.h)) : null,
+                ),
+                child: Text(
+                  _list[index],
+                  style: TextStyle(
+                    fontSize: isSelected ? 20.sp : 16.sp,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? const Color(0xFF27214D) : Colors.grey,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
       ),
     );
   }
 
-  Widget _buildStandardCard(Product product) {
+  Widget _buildStandardCard(Product product, bool showBackground) {
     return Container(
       width: 155.w,
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: product.backgroundColor,
+        // Logic: Use product's color if showBackground is true, else transparent
+        color: showBackground ? (product.backgroundColor ?? Colors.white) : Colors.transparent,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
+        boxShadow: showBackground
+            ? [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
-        ],
+        ]
+            : null,
       ),
       child: Column(
         children: [
