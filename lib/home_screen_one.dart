@@ -295,17 +295,12 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
           Align(
             alignment: Alignment.topRight,
             child: GestureDetector(
-              onTap: () {
-                productController.toggleFavorite(product.id);
-              },
-              child: Obx(() {
-                bool isFav = productController.isFavorite(product.id);
-                return Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
-                  color: const Color(0xffFFA451),
-                  size: 20.sp,
-                );
-              }),
+              onTap: () => productController.toggleFavorite(product.id),
+              child: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: const Color(0xffFFA451),
+                size: 20.sp,
+              ),
             ),
           ),
           Image.asset(product.image, height: 80.h, fit: BoxFit.contain),
