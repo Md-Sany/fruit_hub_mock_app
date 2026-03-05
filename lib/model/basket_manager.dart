@@ -55,13 +55,13 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Initialize recommended with top sellers
+    // Initialize recommended with products that have high total sales
     recommended.value = allProducts.where((p) => p.totalSells > 100).take(5).toList();
-    // Start with the "Hottest" filter applied
+    // Start with the default filter applied
     updateFilter(0);
   }
 
-  // Logic to automatically sort based on the selected tab
+  // Logic to sort products based on the selected tab
   void updateFilter(int index) {
     selectedFilterIndex.value = index;
     List<Product> tempList = List.from(allProducts);
@@ -84,32 +84,33 @@ class ProductController extends GetxController {
   }
 
   void toggleFavorite(String productId) {
-    // Update in recommended list
-    int recIndex = recommended.indexWhere((p) => p.id == productId);
-    if (recIndex != -1) {
-      recommended[recIndex] = recommended[recIndex].copyWith(
-        isFavorite: !recommended[recIndex].isFavorite,
-      );
-    }
-
-    // Update in filtered list
-    int filtIndex = filtered.indexWhere((p) => p.id == productId);
-    if (filtIndex != -1) {
-      filtered[filtIndex] = filtered[filtIndex].copyWith(
-        isFavorite: !filtered[filtIndex].isFavorite,
-      );
-    }
-
-    // Also update the source data (optional but good for consistency)
+    // 1. Update the source data in allProducts first
     int sourceIndex = allProducts.indexWhere((p) => p.id == productId);
     if (sourceIndex != -1) {
       allProducts[sourceIndex] = allProducts[sourceIndex].copyWith(
         isFavorite: !allProducts[sourceIndex].isFavorite,
       );
+
+      // 2. Sync the Recommended list
+      int recIndex = recommended.indexWhere((p) => p.id == productId);
+      if (recIndex != -1) {
+        recommended[recIndex] = allProducts[sourceIndex];
+      }
+
+      // 3. Sync the Filtered list
+      int filtIndex = filtered.indexWhere((p) => p.id == productId);
+      if (filtIndex != -1) {
+        filtered[filtIndex] = allProducts[sourceIndex];
+      }
+
+      // Refresh observables to ensure UI updates across all screens
+      recommended.refresh();
+      filtered.refresh();
     }
   }
 
   bool isFavorite(String productId) {
+    // Check favorite status directly from the source list
     return allProducts.firstWhere((p) => p.id == productId).isFavorite;
   }
 }
