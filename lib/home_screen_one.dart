@@ -295,11 +295,9 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             alignment: Alignment.topRight,
             child: GestureDetector(
               onTap: () {
-                // This is the critical line that connects the home screen to the manager
                 productController.toggleFavorite(product.id);
               },
               child: Obx(() {
-                // Use the controller to check the current status to ensure the icon changes color
                 bool isFav = productController.isFavorite(product.id);
                 return Icon(
                   isFav ? Icons.favorite : Icons.favorite_border,
