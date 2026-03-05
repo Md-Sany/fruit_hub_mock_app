@@ -105,6 +105,13 @@ class ProductController extends GetxController {
   }
 
   bool isFavorite(String productId) {
-    return allProducts.firstWhere((p) => p.id == productId).isFavorite;
+    // Check the observable lists first so Obx picks up the dependency
+    final inRec = recommended.any((p) => p.id == productId && p.isFavorite);
+    final inFilt = filtered.any((p) => p.id == productId && p.isFavorite);
+
+    // Also check the master list for consistency
+    final inMaster = allProducts.firstWhere((p) => p.id == productId).isFavorite;
+
+    return inRec || inFilt || inMaster;
   }
 }
