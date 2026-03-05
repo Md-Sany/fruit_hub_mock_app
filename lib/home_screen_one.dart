@@ -248,25 +248,26 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         scrollDirection: Axis.horizontal,
         itemCount: _list.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () => productController.updateFilter(index),
-            child: Container(
-              margin: EdgeInsets.only(right: 25.w),
-              decoration: BoxDecoration(
-                border: index == productController.selectedFilterIndex.value
-                    ? Border(bottom: BorderSide(color: const Color(0xFFFFA451), width: 2.h))
-                    : null,
-              ),
-              child: Text(
-                _list[index],
-                style: TextStyle(
-                  fontSize: index == productController.selectedFilterIndex.value ? 20.sp : 16.sp,
-                  fontWeight: index == productController.selectedFilterIndex.value ? FontWeight.bold : FontWeight.normal,
-                  color: index == productController.selectedFilterIndex.value ? const Color(0xFF27214D) : Colors.grey,
+          return Obx(() {
+            final isSelected = index == productController.selectedFilterIndex.value;
+            return GestureDetector(
+              onTap: () => productController.updateFilter(index),
+              child: Container(
+                margin: EdgeInsets.only(right: 25.w),
+                decoration: BoxDecoration(
+                  border: isSelected ? Border(bottom: BorderSide(color: const Color(0xFFFFA451), width: 2.h)) : null,
+                ),
+                child: Text(
+                  _list[index],
+                  style: TextStyle(
+                    fontSize: isSelected ? 20.sp : 16.sp,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? const Color(0xFF27214D) : Colors.grey,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
       ),
     );
