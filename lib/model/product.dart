@@ -6,12 +6,12 @@ class Product {
   final String price;
   final String image;
   final String description;
-  final Color? backgroundColor; // Nullable for "no background" items
+  final Color? backgroundColor;
   final bool isFavorite;
-  final DateTime addedDate;       // Track when product was added
-  final int favoriteCount;        // Count of users who favorited
-  final int totalSells;           // Total lifetime sales
-  final int sellsLast24Hours;     // Sales in the last 24 hours for "Hottest"
+  final DateTime addedDate;
+  final int favoriteCount;
+  final int totalSells;
+  final int sellsLast24Hours;
 
   Product({
     required this.id,
@@ -44,7 +44,6 @@ class Product {
   }
 }
 
-// 1. All items in one product model list
 List<Product> allProducts = [
   Product(
     id: '1',
@@ -105,7 +104,6 @@ List<Product> allProducts = [
     sellsLast24Hours: 5,
   ),
 
-  // 5. Generate 20 more items (duplicates with different names/long descriptions)
   ...List.generate(20, (index) {
     return Product(
       id: 'extra_${index + 10}',
@@ -127,12 +125,10 @@ List<Product> allProducts = [
       favoriteCount: (index + 1) * 7,
       totalSells: (index + 1) * 15,
       sellsLast24Hours: index + 2,
-      // No background color for these extra items
       backgroundColor: null,
     );
   }),
 ];
 
-// Compatibility lists for your current ProductController structure
 List<Product> recommendedProducts = allProducts.where((p) => p.totalSells > 200).toList();
 List<Product> filteredProducts = allProducts;

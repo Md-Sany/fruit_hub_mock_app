@@ -56,7 +56,6 @@ class FavoritesScreen extends StatelessWidget {
 
           Expanded(
             child: Obx(() {
-              // Create a combined list and use a Set to filter out duplicate IDs
               final combinedList = [...productController.recommended, ...productController.filtered];
               final uniqueIds = <String>{};
 

@@ -78,38 +78,30 @@ class ProductController extends GetxController {
   }
 
   void toggleFavorite(String productId) {
-    // 1. Find the product in the master list (product.dart)
     int sourceIndex = allProducts.indexWhere((p) => p.id == productId);
 
     if (sourceIndex != -1) {
-      // 2. Create the updated product with flipped favorite status
       final updatedProduct = allProducts[sourceIndex].copyWith(
         isFavorite: !allProducts[sourceIndex].isFavorite,
       );
 
-      // 3. Update the master list
       allProducts[sourceIndex] = updatedProduct;
 
-      // 4. Update the observable lists so Home and Favorites screens rebuild
-      // We update the items inside the lists to match the master data
       int recIdx = recommended.indexWhere((p) => p.id == productId);
       if (recIdx != -1) recommended[recIdx] = updatedProduct;
 
       int filtIdx = filtered.indexWhere((p) => p.id == productId);
       if (filtIdx != -1) filtered[filtIdx] = updatedProduct;
 
-      // 5. Tell GetX that the data has changed
       recommended.refresh();
       filtered.refresh();
     }
   }
 
   bool isFavorite(String productId) {
-    // Check the observable lists first so Obx picks up the dependency
     final inRec = recommended.any((p) => p.id == productId && p.isFavorite);
     final inFilt = filtered.any((p) => p.id == productId && p.isFavorite);
 
-    // Also check the master list for consistency
     final inMaster = allProducts.firstWhere((p) => p.id == productId).isFavorite;
 
     return inRec || inFilt || inMaster;

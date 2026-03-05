@@ -131,7 +131,6 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
             onTap: () => Get.to(() => AddToBasket(product: product)),
             child: Padding(
               padding: EdgeInsets.only(right: 16.w),
-              // Recommended should always be white/transparent background
               child: _buildStandardCard(product, false),
             ),
           );
@@ -149,8 +148,6 @@ class _HomeScreenOneState extends State<HomeScreenOne> {
         itemBuilder: (context, index) {
           final product = productController.filtered[index];
 
-          // Show background only for the 1st item (index == 0)
-          // and not if the 'Top' filter (index 3) is selected
           bool showBackground = index == 0 && productController.selectedFilterIndex.value != 3;
 
           return GestureDetector(
