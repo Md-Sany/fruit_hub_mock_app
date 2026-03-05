@@ -118,6 +118,10 @@ List<Product> allProducts = [
       description: "This special variant ${index + 1} offers a unique twist on our classic recipes. "
           "Carefully curated by our master chefs, this fruit salad features premium seasonal ingredients "
           "balanced for both flavor and maximum nutritional benefit. Experience the fresh textures and "
+          "vibrant aromas in every bite of this handcrafted healthy meal option."
+          "balanced for both flavor and maximum nutritional benefit. Experience the fresh textures and "
+          "vibrant aromas in every bite of this handcrafted healthy meal option."
+          "balanced for both flavor and maximum nutritional benefit. Experience the fresh textures and "
           "vibrant aromas in every bite of this handcrafted healthy meal option.",
       addedDate: DateTime.now().subtract(Duration(hours: index * 4)),
       favoriteCount: (index + 1) * 7,
