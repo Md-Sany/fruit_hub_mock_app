@@ -56,7 +56,7 @@ class FavoritesScreen extends StatelessWidget {
 
           Expanded(
             child: Obx(() {
-              final favoriteProducts = [...productController.recommended, ...productController.filtered]
+              final favoriteProducts = allProducts
                   .where((p) => p.isFavorite)
                   .toList();
 
