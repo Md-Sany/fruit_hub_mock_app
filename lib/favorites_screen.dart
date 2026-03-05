@@ -56,9 +56,17 @@ class FavoritesScreen extends StatelessWidget {
 
           Expanded(
             child: Obx(() {
-              final favoriteProducts = allProducts
-                  .where((p) => p.isFavorite)
-                  .toList();
+              // Create a combined list and use a Set to filter out duplicate IDs
+              final combinedList = [...productController.recommended, ...productController.filtered];
+              final uniqueIds = <String>{};
+
+              final favoriteProducts = combinedList.where((product) {
+                if (product.isFavorite && !uniqueIds.contains(product.id)) {
+                  uniqueIds.add(product.id);
+                  return true;
+                }
+                return false;
+              }).toList();
 
               if (favoriteProducts.isEmpty) {
                 return Center(
@@ -101,7 +109,7 @@ class FavoritesScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: product.backgroundColor,
+        color: product.backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
